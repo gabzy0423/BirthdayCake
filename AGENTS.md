@@ -10,6 +10,8 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # Interactive 3D Birthday Cake: Development Guide
 
+Product decisions from the requirements interview live in [docs/requirements.md](docs/requirements.md); agreed domain terms live in [GLOSSARY.md](GLOSSARY.md). Read these alongside this guide before implementation. Unresolved interview questions are not approved requirements.
+
 ## Scope and instruction handling
 
 - Treat this file as the primary repository guide. Preserve the generated Next.js block above; do not remove it or replace version-specific guidance with assumptions from older Next.js releases.
