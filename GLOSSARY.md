@@ -23,3 +23,7 @@ _Avoid_: Twenty individual candles, five regular candles
 **Completed celebration**:
 The ending with the greeting visible and both candles extinguished, after smoke and the brief confetti burst.
 _Avoid_: Replay screen
+
+**Birthday cats**:
+The three feline companions in Stephanie's celebration: a black cat, a cream-white Siamese, and a white calico with orange and black patches.
+_Avoid_: Three black cats

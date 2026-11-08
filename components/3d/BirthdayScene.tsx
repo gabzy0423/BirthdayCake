@@ -50,10 +50,10 @@ export default function BirthdayScene() {
       <Canvas
         orthographic
         camera={{ position: [2.3, 2.5, 6], zoom: 90, near: 0.1, far: 40 }}
-        dpr={[1, 1.5]}
-        shadows="percentage"
+        dpr={0.5}
+        shadows="basic"
         frameloop={reducedMotion ? "demand" : "always"}
-        gl={{ alpha: true, antialias: true, powerPreference: "low-power" }}
+        gl={{ alpha: true, antialias: false, powerPreference: "low-power" }}
         fallback={<CakeFallback message={unavailableMessage} />}
         role="img"
         aria-label="3D cream birthday cake with white frosting, sage green decorations, and lit number 20 candles"
@@ -66,14 +66,14 @@ export default function BirthdayScene() {
           intensity={3}
           color="#fff3de"
           castShadow
-          shadow-mapSize={[512, 512]}
+          shadow-mapSize={[256, 256]}
           shadow-camera-left={-3}
           shadow-camera-right={3}
           shadow-camera-top={4}
           shadow-camera-bottom={-2}
           shadow-normalBias={0.035}
         />
-        <Bounds fit clip observe margin={1.18} maxDuration={reducedMotion ? 0 : 0.5}>
+        <Bounds fit clip observe margin={1.05} maxDuration={reducedMotion ? 0 : 0.5}>
           <Cake candleState="lit" reducedMotion={reducedMotion} />
         </Bounds>
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.015, 0]} receiveShadow>

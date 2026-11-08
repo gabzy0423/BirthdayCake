@@ -11,7 +11,7 @@
   --white: #ffffff;
   --muted: #687063;
   --border: #d7dece;
-  --font-display: Georgia, "Times New Roman", serif;
+  --font-display: var(--font-pixel), "Courier New", monospace;
 }
 
 @theme inline {
@@ -24,7 +24,7 @@
   --color-muted: var(--muted);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-display: Georgia, "Times New Roman", serif;
+  --font-display: var(--font-pixel), "Courier New", monospace;
 }
 
 body {
@@ -44,9 +44,12 @@ button:disabled {
 
 .birthday-page {
   flex: 1;
+  font-family: var(--font-pixel), "Courier New", monospace;
   background:
-    radial-gradient(ellipse at 0% 5%, var(--sage-soft), transparent 45%),
-    radial-gradient(ellipse at 100% 95%, var(--cream), transparent 40%);
+    linear-gradient(var(--sage-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--sage-soft) 1px, transparent 1px),
+    var(--background);
+  background-size: 24px 24px;
 }
 
 .birthday-shell {
@@ -55,35 +58,49 @@ button:disabled {
   width: min(100%, 30rem);
   min-height: 100svh;
   margin-inline: auto;
-  padding: max(1.25rem, env(safe-area-inset-top)) 1.5rem max(1rem, env(safe-area-inset-bottom));
+  padding: max(0.75rem, env(safe-area-inset-top)) 1.5rem max(0.5rem, env(safe-area-inset-bottom));
 }
 
 .music-control {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.625rem;
   min-height: 2.75rem;
-  padding: 0.5rem 0.875rem;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--white);
+  padding: 0.5rem 0;
   color: var(--muted);
-  font-size: 0.75rem;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.music-switch-track {
+  display: flex;
+  align-items: center;
+  width: 2.25rem;
+  height: 1.375rem;
+  padding: 0.125rem;
+  border: 2px solid var(--sage-dark);
+  background: var(--sage-soft);
+  box-shadow: 2px 2px 0 var(--border);
+}
+
+.music-switch-thumb {
+  width: 0.875rem;
+  height: 0.875rem;
+  background: var(--sage-dark);
 }
 
 .birthday-content {
   display: flex;
-  flex: 1;
   flex-direction: column;
-  justify-content: center;
-  padding-block: clamp(1.5rem, 4svh, 3rem);
+  justify-content: flex-start;
+  padding-block: clamp(0.75rem, 2svh, 1.25rem);
+  margin-top: clamp(1rem, 4svh, 2.5rem);
 }
 
-.chapter-label,
-.stage-caption {
+.chapter-label {
   color: var(--sage-dark);
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -92,9 +109,10 @@ button:disabled {
 .birthday-title {
   margin-top: 0.875rem;
   font-family: var(--font-display);
-  font-size: clamp(2.25rem, 9.8vw, 3.25rem);
-  line-height: 1.12;
-  letter-spacing: -0.045em;
+  font-size: clamp(2.25rem, 9.5vw, 3.25rem);
+  line-height: 1.08;
+  font-weight: 500;
+  letter-spacing: -0.025em;
   text-wrap: balance;
 }
 
@@ -104,36 +122,18 @@ button:disabled {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: clamp(16rem, 34svh, 21rem);
-  margin-block: 0.75rem;
+  min-height: 0;
+  margin-block: 0.25rem;
   isolation: isolate;
-}
-
-.cake-stage::before {
-  position: absolute;
-  z-index: -1;
-  width: min(90%, 19rem);
-  height: 80%;
-  border-radius: 50%;
-  background: radial-gradient(ellipse, var(--sage-soft), transparent 72%);
-  content: "";
-}
-
-.stage-orbit {
-  position: absolute;
-  top: 15%;
-  bottom: 14%;
-  left: 12%;
-  right: 12%;
-  z-index: -1;
-  border: 1px dashed var(--border);
-  border-radius: 50%;
-  transform: rotate(-14deg);
 }
 
 .cake-viewport {
   width: 100%;
-  height: clamp(15rem, 31svh, 19rem);
+  height: clamp(14rem, 40svh, 23rem);
+}
+
+.cake-viewport canvas {
+  image-rendering: pixelated;
 }
 
 .cake-fallback {
@@ -152,17 +152,16 @@ button:disabled {
   width: 10rem;
   height: 4.5rem;
   margin-top: 4.5rem;
+  border: 3px solid var(--sage-dark);
   border-bottom: 0.5rem solid var(--sage);
-  border-radius: 50% 50% 35% 35% / 25% 25% 15% 15%;
   background: var(--cream);
-  box-shadow: 0 0.5rem 0 0.25rem var(--white);
+  box-shadow: 4px 6px 0 var(--white);
 }
 
 .fallback-frosting {
   position: absolute;
   inset: 0 0 auto;
   height: 1.5rem;
-  border-radius: 50%;
   background: var(--white);
 }
 
@@ -186,78 +185,155 @@ button:disabled {
   line-height: 1.5;
 }
 
-.stage-caption {
-  margin-top: 0;
-  font-size: 0.5625rem;
-}
-
-.stage-spark {
-  position: absolute;
-  color: var(--sage-dark);
-  font-family: var(--font-display);
-  font-size: 2rem;
-}
-
-.stage-spark-left {
-  top: 24%;
-  left: 13%;
-}
-
-.stage-spark-right {
-  right: 12%;
-  bottom: 24%;
-  font-size: 1.5rem;
-}
-
-.wish-controls {
-  text-align: center;
-}
-
-.microphone-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.625rem;
-  width: 100%;
-  min-height: 3.25rem;
-  margin-top: 1.25rem;
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--sage);
-  border-radius: 1rem;
-  background: var(--sage-soft);
-  color: var(--sage-dark);
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.manual-blow-button {
-  min-height: 2.75rem;
-  padding: 0.625rem;
-  color: var(--muted);
-  font-size: 0.75rem;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
-.birthday-footer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  padding-top: 0.5rem;
-  color: var(--muted);
-  font-size: 0.625rem;
-  letter-spacing: 0.025em;
-}
-
-.footer-flower {
-  color: var(--sage-dark);
-  font-size: 1rem;
-}
-
 @media (min-width: 640px) {
   .birthday-shell {
     padding-top: 2rem;
     padding-bottom: 1.5rem;
+  }
+}
+
+.cat-footer {
+  position: relative;
+  z-index: 1;
+  margin-top: -2.5rem;
+}
+
+.cat-trio {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+  color: #171c18;
+  pointer-events: none;
+}
+
+.pixel-cat {
+  width: clamp(4rem, 23vw, 6rem);
+  height: auto;
+  aspect-ratio: 4 / 5;
+  flex-shrink: 0;
+  --sway-duration: 4s;
+  --blink-duration: 5.3s;
+  --cat-delay: -1s;
+}
+
+.pixel-cat-siamese {
+  transform: translateY(0.75rem);
+  --sway-duration: 4.8s;
+  --blink-duration: 6.7s;
+  --cat-delay: -3s;
+}
+
+.pixel-cat-calico {
+  --sway-duration: 5.5s;
+  --blink-duration: 4.7s;
+  --cat-delay: -2s;
+}
+
+.cat-head {
+  transform-origin: 16px 23px;
+  animation: cat-sway var(--sway-duration) steps(4, end) var(--cat-delay) infinite;
+}
+
+.cat-eyes {
+  transform-origin: 16px 15px;
+  animation: cat-blink var(--blink-duration) steps(1, end) var(--cat-delay) infinite;
+}
+
+.cat-eye {
+  fill: #d9dfb0;
+}
+
+.cat-nose {
+  fill: #bd9084;
+}
+
+.cat-paw-lines {
+  fill: var(--sage-dark);
+}
+
+.pixel-cat-siamese,
+.pixel-cat-calico {
+  color: #fffdf5;
+  filter: drop-shadow(1px 0 0 var(--sage-dark)) drop-shadow(-1px 0 0 var(--sage-dark));
+}
+
+.cat-dark-points,
+.pixel-cat-siamese .cat-paws,
+.pixel-cat-siamese .cat-tail {
+  fill: #4b3a32;
+}
+
+.pixel-cat-siamese .cat-eye {
+  fill: #91c4df;
+}
+
+.cat-orange-patches {
+  fill: #c77b3d;
+}
+
+.pixel-cat-calico .cat-dark-points,
+.pixel-cat-calico .cat-tail {
+  fill: #171c18;
+}
+
+.pixel-cat-calico .cat-eye {
+  fill: #7d9b76;
+}
+
+.cat-pause-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  margin-top: 0.75rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.cat-pause {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--sage-dark);
+}
+
+.cat-pause:focus-visible {
+  outline: 2px solid var(--sage-dark);
+  outline-offset: 4px;
+}
+
+.cat-footer:has(.cat-pause:checked) .cat-trio * {
+  animation-play-state: paused;
+}
+
+@media (max-height: 740px) and (orientation: portrait) {
+  .birthday-content { padding-block: 0.5rem; margin-top: 0.75rem; }
+  .birthday-title { font-size: 2rem; margin-top: 0.5rem; }
+  .cake-viewport { height: clamp(12rem, 37svh, 17rem); }
+  .pixel-cat { width: clamp(3rem, 18vw, 4.5rem); }
+  .cat-pause-control { margin-top: 0.25rem; }
+}
+
+@keyframes cat-sway {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes cat-blink {
+  0%, 94%, 100% { transform: scaleY(1); }
+  96%, 98% { transform: scaleY(0.1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cat-head,
+  .cat-eyes {
+    animation: none;
+  }
+
+  .cat-pause-control {
+    display: none;
   }
 }
