@@ -90,6 +90,30 @@ A licensed music asset has not been selected yet.
 - [ ] Add smoke, confetti, and the birthday greeting
 - [ ] Verify accessibility, fallbacks, and real-device behavior
 
+## Tech stack
+
+<p>
+  <img src="https://img.shields.io/badge/Next.js-33442F?style=flat-square&amp;logo=nextdotjs&amp;logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/React-33442F?style=flat-square&amp;logo=react&amp;logoColor=white" alt="React" />
+  <img src="https://img.shields.io/badge/TypeScript-33442F?style=flat-square&amp;logo=typescript&amp;logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-33442F?style=flat-square&amp;logo=tailwindcss&amp;logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/Three.js-33442F?style=flat-square&amp;logo=threedotjs&amp;logoColor=white" alt="Three.js" />
+  <img src="https://img.shields.io/badge/ESLint-33442F?style=flat-square&amp;logo=eslint&amp;logoColor=white" alt="ESLint" />
+</p>
+
+| Layer | Technology | Responsibility |
+| --- | --- | --- |
+| Framework | Next.js App Router | Routing, server rendering, and metadata |
+| Interface | React, TypeScript | Components, interaction state, and static typing |
+| Styling | Tailwind CSS | Responsive layout and theme styling |
+| 3D rendering | Three.js, React Three Fiber | Cake geometry, materials, and scene animation |
+| Scene helpers | Drei | Reusable helpers for the 3D scene |
+| UI animation | Motion | Installed for planned interface and greeting transitions |
+| Code quality | ESLint, TypeScript | Linting and type checks |
+| Tooling | Node.js, npm | Development scripts, dependency management, and focused tests |
+
+Planned microphone analysis uses the browser's **Web Audio API** and **MediaDevices API**. No microphone SDK is required.
+
 ## Run locally
 
 Use **npm** with the committed lockfile and a supported Node.js LTS release that meets Next.js's minimum of **20.9.0**.
@@ -102,7 +126,7 @@ npm run dev
 Open [localhost:3000](http://localhost:3000) to preview the portrait-first layout and 3D cake. A static cake fallback appears if 3D rendering is unavailable.
 
 <details>
-<summary>Development commands and stack</summary>
+<summary>Development commands</summary>
 
 | Command | Purpose |
 | --- | --- |
@@ -113,8 +137,6 @@ Open [localhost:3000](http://localhost:3000) to preview the portrait-first layou
 | `npm run build` | Create the production build |
 | `npm start` | Serve the production build |
 | `node --test tests/cake-geometry.test.mjs` | Check candle geometry using Node.js 24 |
-
-The installed stack includes Next.js App Router, React, TypeScript, Tailwind CSS, Three.js, React Three Fiber, Drei, and Motion. Planned microphone analysis uses the browser's Web Audio API.
 
 Focused geometry tests use Node.js 24's built-in test runner and native TypeScript loading; no separate test framework is installed. Builds currently use Google fonts and may need network access to fetch them.
 
