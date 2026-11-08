@@ -5,12 +5,12 @@ Status: requirements interview complete; user confirmed the consolidated underst
 ## Confirmed decisions
 
 - Build a personalized birthday experience for Stephanie.
-- Use a soft pastel visual direction: cream background, subtle pink accents, warm lighting, and a playful 3D cake.
+- Use the confirmed Sage Green + Cream + White palette with warm lighting and a playful 3D cake. Sage green is the primary accent for decorations and controls, cream is the main background and cake base, and white provides frosting/highlights and supporting surfaces. Green is Stephanie's favorite color; this palette replaces the earlier pink direction. Exact color values remain to be selected and checked for contrast during visual implementation.
 - Prioritize phone portrait layouts while retaining desktop and other responsive layouts required by AGENTS.md.
 - One successful blow extinguishes all candles together, rather than targeting individual candles.
 - Include soft birthday instrumental music with Play/Mute controls. Playback starts through a user action, not autoplay.
 - Automatically pause playing music while the microphone is listening. After extinguishing, resume only music that was playing beforehand; preserve the user's mute/pause choice. Do not start previously unstarted music automatically. On listening failure or cancellation, restore the prior playback choice without overriding subsequent user actions.
-- Use one round cake with cream frosting and pink decorations, with two numeral-shaped candles: "2" and "0". Both have flames and extinguish together. Do not add five regular candles from the earlier recommendation.
+- Use one round cake with a cream base, white frosting, and sage green decorations, with two numeral-shaped candles: "2" and "0". Both have flames and extinguish together. Do not add five regular candles from the earlier recommendation.
 - After the smoke, show a short confetti burst and this exact greeting:
 
   > Happy Birthday, Stephanie!
@@ -25,7 +25,7 @@ Status: requirements interview complete; user confirmed the consolidated underst
 
 These are required checks, not results of tests already performed.
 
-- The portrait-first opening shows the pastel round cake and lit "20" candles with clear controls; desktop remains usable.
+- The portrait-first opening uses the Sage Green + Cream + White palette and shows the round cake and lit "20" candles with clear controls; desktop remains usable.
 - Music begins only through user interaction; Play/Mute controls work, and audio-loading/playback failure does not block the celebration.
 - Enabling the microphone explicitly requests access and pauses playing music while listening. Denial, missing hardware, and unsupported APIs leave manual blow usable.
 - A sustained actual blow extinguishes both candles once. Brief noise and ordinary speech do not routinely trigger it under the tested conditions; record device/environment limitations rather than claiming perfect detection.
@@ -48,3 +48,5 @@ These are required checks, not results of tests already performed.
 - 2026-11-08, round 2: user chose soft birthday instrumental music and Play/Mute controls; specified one round cake and number 20; accepted smoke followed by short confetti and the exact greeting above; declined replay. The response explicitly confirmed controls but did not explicitly settle automatic pause/resume during listening.
 - 2026-11-08, round 3: user confirmed two numeral-shaped candles (2 and 0), music pause/resume during microphone listening with mute preserved, and a persistent completed screen without replay that resets on page refresh.
 - 2026-11-08, final confirmation: user accepted the complete consolidated experience ("okay sya mate goods"). Requirements interview complete; application implementation has not started.
+- 2026-11-08, color correction: user specified that Stephanie's favorite color is green. Green supersedes pink for the experience's accents and cake decorations; keep the cream background, pastel styling, and warm lighting.
+- 2026-11-08, palette refinement: user specified Sage Green + Cream + White as the theme, refining the earlier generic green direction.
