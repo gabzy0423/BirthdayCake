@@ -1,26 +1,263 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+  --background: #faf7ef;
+  --foreground: #344538;
+  --sage: #7d9b76;
+  --sage-dark: #4c6848;
+  --sage-soft: #e7eddf;
+  --cream: #f5eedc;
+  --white: #ffffff;
+  --muted: #687063;
+  --border: #d7dece;
+  --font-display: Georgia, "Times New Roman", serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-sage: var(--sage);
+  --color-sage-dark: var(--sage-dark);
+  --color-sage-soft: var(--sage-soft);
+  --color-cream: var(--cream);
+  --color-muted: var(--muted);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-display: Georgia, "Times New Roman", serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--sage-dark);
+  outline-offset: 4px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.birthday-page {
+  flex: 1;
+  background:
+    radial-gradient(ellipse at 0% 5%, var(--sage-soft), transparent 45%),
+    radial-gradient(ellipse at 100% 95%, var(--cream), transparent 40%);
+}
+
+.birthday-shell {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 30rem);
+  min-height: 100svh;
+  margin-inline: auto;
+  padding: max(1.25rem, env(safe-area-inset-top)) 1.5rem max(1rem, env(safe-area-inset-bottom));
+}
+
+.music-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.875rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.birthday-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: clamp(1.5rem, 4svh, 3rem);
+}
+
+.chapter-label,
+.stage-caption {
+  color: var(--sage-dark);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.birthday-title {
+  margin-top: 0.875rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 9.8vw, 3.25rem);
+  line-height: 1.12;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.cake-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(16rem, 34svh, 21rem);
+  margin-block: 0.75rem;
+  isolation: isolate;
+}
+
+.cake-stage::before {
+  position: absolute;
+  z-index: -1;
+  width: min(90%, 19rem);
+  height: 80%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, var(--sage-soft), transparent 72%);
+  content: "";
+}
+
+.stage-orbit {
+  position: absolute;
+  top: 15%;
+  bottom: 14%;
+  left: 12%;
+  right: 12%;
+  z-index: -1;
+  border: 1px dashed var(--border);
+  border-radius: 50%;
+  transform: rotate(-14deg);
+}
+
+.cake-viewport {
+  width: 100%;
+  height: clamp(15rem, 31svh, 19rem);
+}
+
+.cake-fallback {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+.fallback-cake {
+  position: relative;
+  width: 10rem;
+  height: 4.5rem;
+  margin-top: 4.5rem;
+  border-bottom: 0.5rem solid var(--sage);
+  border-radius: 50% 50% 35% 35% / 25% 25% 15% 15%;
+  background: var(--cream);
+  box-shadow: 0 0.5rem 0 0.25rem var(--white);
+}
+
+.fallback-frosting {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--white);
+}
+
+.fallback-candles {
+  position: absolute;
+  z-index: 1;
+  bottom: calc(100% - 0.5rem);
+  left: 0;
+  right: 0;
+  color: var(--sage-dark);
+  font-family: var(--font-display);
+  font-size: 4rem;
+  line-height: 1;
+  letter-spacing: 0.1em;
+}
+
+.cake-fallback-message {
+  max-width: 16rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.stage-caption {
+  margin-top: 0;
+  font-size: 0.5625rem;
+}
+
+.stage-spark {
+  position: absolute;
+  color: var(--sage-dark);
+  font-family: var(--font-display);
+  font-size: 2rem;
+}
+
+.stage-spark-left {
+  top: 24%;
+  left: 13%;
+}
+
+.stage-spark-right {
+  right: 12%;
+  bottom: 24%;
+  font-size: 1.5rem;
+}
+
+.wish-controls {
+  text-align: center;
+}
+
+.microphone-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  width: 100%;
+  min-height: 3.25rem;
+  margin-top: 1.25rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--sage);
+  border-radius: 1rem;
+  background: var(--sage-soft);
+  color: var(--sage-dark);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.manual-blow-button {
+  min-height: 2.75rem;
+  padding: 0.625rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.birthday-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+  color: var(--muted);
+  font-size: 0.625rem;
+  letter-spacing: 0.025em;
+}
+
+.footer-flower {
+  color: var(--sage-dark);
+  font-size: 1rem;
+}
+
+@media (min-width: 640px) {
+  .birthday-shell {
+    padding-top: 2rem;
+    padding-bottom: 1.5rem;
+  }
 }

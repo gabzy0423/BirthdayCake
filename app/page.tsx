@@ -1,69 +1,76 @@
-import Image from "next/image";
+﻿import Image from "next/image";
+
+import BirthdayCake from "@/components/3d/BirthdayCake";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="birthday-page">
+      <div className="birthday-shell">
+        <header className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2.5">
+            <Image src="/icon.svg" alt="" width={36} height={36} />
+            <span className="text-xs font-medium tracking-wide text-muted">
+              a little birthday magic
+            </span>
+          </div>
+          <button type="button" disabled aria-describedby="preview-note" className="music-control">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="size-4">
+              <path d="M9 18V5l12-2v13M9 9l12-2" />
+              <ellipse cx="6" cy="18" rx="3" ry="2.5" />
+              <ellipse cx="18" cy="16" rx="3" ry="2.5" />
+            </svg>
+            Music
+          </button>
+        </header>
+
+        <section aria-labelledby="birthday-title" className="birthday-content">
+          <div className="text-center">
+            <p className="chapter-label">A beautiful new chapter</p>
+            <h1 id="birthday-title" className="birthday-title">
+              Happy birthday,
+              <span className="block italic text-sage-dark">Stephanie.</span>
+            </h1>
+            <p className="mx-auto mt-4 max-w-72 text-sm leading-relaxed text-muted">
+              Twenty years of you.
+              <br />
+              A whole world of wishes ahead.
+            </p>
+          </div>
+
+          <figure className="cake-stage" aria-label="Stephanie’s 20th birthday cake">
+            <span className="stage-spark stage-spark-left" aria-hidden="true">✧</span>
+            <span className="stage-spark stage-spark-right" aria-hidden="true">✧</span>
+            <div className="stage-orbit" aria-hidden="true" />
+            <BirthdayCake />
+            <figcaption className="stage-caption">Made just for you</figcaption>
+          </figure>
+
+          <div className="wish-controls">
+            <h2 className="font-display text-2xl text-foreground">Make a little wish.</h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted">
+              Close your eyes. Think of something wonderful.
+            </p>
+            <button type="button" disabled aria-describedby="preview-note" className="microphone-button">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="size-5">
+                <rect x="9" y="3" width="6" height="12" rx="3" />
+                <path d="M6 11v1a6 6 0 0 0 12 0v-1M12 18v3m-3 0h6" />
+              </svg>
+              Enable microphone
+            </button>
+            <button type="button" disabled aria-describedby="preview-note" className="manual-blow-button">
+              Or blow out the candles with a tap
+            </button>
+            <p id="preview-note" className="mt-2 text-xs leading-relaxed text-muted">
+              Music and blowing controls coming soon
+            </p>
+          </div>
+        </section>
+
+        <footer className="birthday-footer">
+          A little celebration. A lot of love.
+          <span aria-hidden="true" className="footer-flower">✳</span>
+        </footer>
+      </div>
+    </main>
   );
 }
