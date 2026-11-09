@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useBirthdayMusic } from "./BirthdayMusic";
 
 export default function BirthdayEntrance({ children }: { children: ReactNode }) {
+  const music = useBirthdayMusic();
   const [phase, setPhase] = useState<"invitation" | "opening" | "entered">("invitation");
   const celebration = useRef<HTMLDivElement>(null);
 
@@ -44,6 +46,7 @@ export default function BirthdayEntrance({ children }: { children: ReactNode }) 
           disabled={phase === "opening"}
           onClick={() => {
             if (phase !== "invitation") return;
+            music.prepare();
             setPhase(window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "entered" : "opening");
           }}
         >

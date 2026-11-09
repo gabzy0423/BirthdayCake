@@ -43,7 +43,7 @@ These are required checks, not results of tests already performed.
 
 ## Remaining setup and handoff
 
-- No audio playback implementation or music asset exists yet. The agreed sound is chiptune Happy Birthday; choose a suitable original synthesized arrangement or an appropriately sourced asset during implementation and record its source as applicable.
+- Music is synthesized locally with Web Audio: a square-wave arrangement of the traditional Happy Birthday melody, with gentle note envelopes and a 1.5-second gap between repetitions. No sampled recording or external music asset is used. Actual phone/speaker listening checks remain necessary.
 - The user confirmed the consolidated understanding and closed the interview. Begin application development only on an implementation request; do not repeat settled questions.
 - Do not install dependencies, scaffold components, or push documentation as part of this interview unless separately requested.
 
@@ -53,8 +53,8 @@ These are required checks, not results of tests already performed.
 - Entry transition: the gift opens, then fades into the cake page in approximately half a second; use an instant transition with reduced motion. Prevent repeated activation during entry. The invitation replaces the opening view rather than obscuring an otherwise interactive cake page.
 - Revised landing/music flow: entering starts the cake entrance sequence, with music beginning at landing completion. Microphone enablement remains a separate explicit action. This supersedes the earlier toggle-only music start decision.
 - Reserve the cake area with a short loading status while the 3D scene loads; do not display a temporary cake drawing that flashes before the actual cake. Fit the camera immediately on scene mount. Keep the static cake fallback for WebGL failures. Do not show fabricated loading percentages or impose an extra countdown.
-- The user confirmed the consolidated splash flow and requested implementation. The invitation and entry transition are implemented; music playback and microphone interaction remain separate future features.
-- Landing/music refinement: user accepted soft descent with one small bounce, instant reduced-motion appearance, gentle looping chiptune Happy Birthday with short gaps, and the music toggle as the off control. User rejected the additional "Opens with music" text. Awaiting confirmation of this consolidated refinement; no landing or playback code has been implemented.
+- The invitation, cake landing, and landing-triggered music are implemented. Microphone interaction remains a separate future feature, including its required music-pause integration.
+- Landing/music refinement: user accepted soft descent with one small bounce, instant reduced-motion appearance, gentle looping chiptune Happy Birthday with short gaps, and the music toggle as the off control. User rejected the additional "Opens with music" text, then requested implementation after pushing the earlier changes. This refinement is implemented.
 
 - Cat display refinement: user confirmed relaxed front-facing sitting poses; a bottom-center trio with small gaps and no container; and gentle in-place sway plus occasional blinking with individual timing. Black/Siamese/calico order and approximately 64px size were accepted with the arrangement recommendation. The user confirmed the consolidated design and requested implementation; the refinement interview is complete.
 

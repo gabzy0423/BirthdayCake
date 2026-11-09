@@ -29,6 +29,20 @@ async function read(expression) {
 const pause = ms => new Promise(r => setTimeout(r, ms));
 try {
   await send('Page.enable');
+  await send('Page.addScriptToEvaluateOnNewDocument', { source: `
+    window.birthdayAudioCheck = { contexts: 0, starts: [], cancels: 0 };
+    const NativeAudioContext = window.AudioContext;
+    window.AudioContext = class extends NativeAudioContext {
+      constructor(...args) { super(...args); window.birthdayAudioCheck.contexts++; }
+      createOscillator() {
+        const voice = super.createOscillator();
+        const start = voice.start.bind(voice), stop = voice.stop.bind(voice);
+        voice.start = (...args) => { window.birthdayAudioCheck.starts.push(voice.type); return start(...args); };
+        voice.stop = (...args) => { if (!args.length) window.birthdayAudioCheck.cancels++; return stop(...args); };
+        return voice;
+      }
+    };
+  ` });
   for (const [width, height, reduced] of [[390, 844, false], [320, 667, true]]) {
     await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false });
     await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: reduced ? 'reduce' : 'no-preference' }] });
@@ -40,6 +54,7 @@ try {
     await pause(700);
     assert.equal(await read("document.querySelector('h1')?.textContent"), 'For Stephanie', 'no auto-entry');
     assert.equal(await read("document.querySelectorAll('canvas').length"), 0, 'cake is not mounted behind splash');
+    assert.equal(await read('window.birthdayAudioCheck.contexts'), 0, 'no audio context before entry gesture');
     assert.ok(await read('document.documentElement.scrollHeight <= innerHeight && document.documentElement.scrollWidth <= innerWidth'), 'invitation fits phone');
     await read("document.querySelector('.invitation-button').focus()");
     await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, text: '\r', unmodifiedText: '\r' });
@@ -47,12 +62,21 @@ try {
     await pause(reduced ? 100 : 700);
     assert.ok(await read("document.querySelector('#birthday-title')?.textContent.includes('Stephanie')"), 'keyboard enters celebration');
     assert.equal(await read('document.activeElement.id'), 'birthday-title', 'focus follows entry');
-    assert.equal(await read("document.querySelector('[role=switch]')?.getAttribute('aria-checked')"), 'false', 'music remains off');
+    if (!reduced) assert.equal(await read('window.birthdayAudioCheck.starts.length'), 0, 'no song before landing');
+    for (let i = 0; i < 60; i++) {
+      if (await read('window.birthdayAudioCheck.starts.length > 0')) break;
+      await pause(200);
+    }
+    assert.equal(await read('window.birthdayAudioCheck.starts.length'), 25, 'landing starts one rendition');
+    assert.ok(await read("window.birthdayAudioCheck.starts.every(type => type === 'square')"), 'chiptune waveform');
+    await read("document.querySelector('[role=switch]').click()");
+    assert.equal(await read("document.querySelector('[role=switch]').getAttribute('aria-checked')"), 'false', 'mute works');
+    assert.ok(await read('window.birthdayAudioCheck.cancels > 0 && window.birthdayAudioCheck.cancels <= 25'), 'mute cancels remaining scheduled notes');
     await send('Page.reload');
     await pause(1200);
     assert.equal(await read("document.querySelector('h1')?.textContent"), 'For Stephanie', 'refresh restores invitation');
   }
-  console.log('Passed: invitation, no auto-entry, keyboard entry, focus, refresh, reduced motion, phone fit, music off.');
+  console.log('Passed: invitation, keyboard entry, focus, refresh, reduced motion, phone fit, landing-triggered chiptune, mute.');
 } finally {
   await send('Browser.close');
 }

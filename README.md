@@ -43,7 +43,7 @@ The selected rounded logo is also the site's browser favicon. These HEX values d
 
 ## The birthday experience
 
-**In development:** the portrait-first layout and procedural 3D cake with animated numeral candles are implemented. Microphone detection, the manual blow action, music, and celebration effects below are planned features; their controls are currently disabled.
+**In development:** the portrait-first layout, gift invitation, procedural 3D cake, soft landing, animated numeral candles, and chiptune music toggle are implemented. Microphone detection, the manual blow action, and celebration effects remain planned features.
 
 <details>
 <summary>1. The birthday cake</summary>
@@ -73,9 +73,9 @@ Reduced-motion preferences and a usable fallback when 3D rendering is unavailabl
 <details>
 <summary>Music and playback controls</summary>
 
-Soft birthday instrumental music will start only through a user action, with Play/Mute controls. Playing music will pause while the microphone listens, then return according to the user's previous playback choice.
+The invitation's start action prepares audio silently. A softly synthesized 8-bit Happy Birthday melody begins when the cake lands, repeating after a short pause. The Music toggle turns playback off/on; audio pauses when the page is hidden. With reduced motion, the cake appears instantly and starts the melody when ready. Future microphone integration must pause music during listening and respect the user's playback choice afterward.
 
-A licensed music asset has not been selected yet.
+The melody uses local Web Audio synthesis, with no external recording or music download. Real-device listening checks remain pending.
 
 </details>
 
@@ -86,7 +86,7 @@ A licensed music asset has not been selected yet.
 - [x] Add the selected rounded logo as the browser favicon
 - [x] Build the responsive 3D cake and animated candles
 - [ ] Add local microphone detection and the manual blow action
-- [ ] Add music controls and a licensed instrumental track
+- [x] Add music controls and synthesized chiptune birthday music
 - [ ] Add smoke, confetti, and the birthday greeting
 - [ ] Verify accessibility, fallbacks, and real-device behavior
 

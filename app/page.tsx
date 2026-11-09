@@ -3,9 +3,11 @@
 import BirthdayCake from "@/components/3d/BirthdayCake";
 import BirthdayCats from "@/components/ui/BirthdayCats";
 import BirthdayEntrance from "@/components/BirthdayEntrance";
+import { BirthdayMusicProvider, MusicToggle } from "@/components/BirthdayMusic";
 
 export default function Home() {
   return (
+    <BirthdayMusicProvider>
     <BirthdayEntrance>
     <main className="birthday-page">
       <div className="birthday-shell">
@@ -13,19 +15,7 @@ export default function Home() {
           <div className="flex items-center gap-2.5">
             <Image src="/icon.svg" alt="Stephanie’s birthday cake logo" width={36} height={36} />
           </div>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={false}
-            aria-label="Birthday music (coming soon)"
-            disabled
-            className="music-control"
-          >
-            <span>Music</span>
-            <span className="music-switch-track" aria-hidden="true">
-              <span className="music-switch-thumb" />
-            </span>
-          </button>
+          <MusicToggle />
         </header>
 
         <section aria-labelledby="birthday-title" className="birthday-content">
@@ -47,5 +37,6 @@ export default function Home() {
       </div>
     </main>
     </BirthdayEntrance>
+    </BirthdayMusicProvider>
   );
 }

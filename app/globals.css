@@ -161,6 +161,10 @@ button:disabled {
   background: var(--sage-dark);
 }
 
+.music-control:not(:disabled) { cursor: pointer; }
+.music-control[aria-checked="true"] .music-switch-track { background: var(--sage); }
+.music-control[aria-checked="true"] .music-switch-thumb { transform: translateX(0.875rem); background: var(--white); }
+
 .birthday-content {
   display: flex;
   flex-direction: column;

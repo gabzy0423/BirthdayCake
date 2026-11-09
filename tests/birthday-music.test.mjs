@@ -1,0 +1,77 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { createBirthdayMusic } from "../lib/audio/birthday-music.ts";
+import { cakeLandingY } from "../lib/cake-landing.ts";
+
+// Node.js 24 loads the TypeScript helpers directly; audio nodes are simulated here.
+let contexts = [];
+class FakeContext {
+  state = "suspended";
+  currentTime = 0;
+  destination = {};
+  voices = [];
+  constructor() { contexts.push(this); }
+  async resume() { this.state = "running"; }
+  async close() { this.state = "closed"; }
+  createOscillator() {
+    const node = { frequency: {}, cancelled: false, connect() {}, disconnect() {}, start() {}, stop(when) { if (when === undefined) this.cancelled = true; } };
+    this.voices.push(node);
+    return node;
+  }
+  createGain() {
+    return { gain: { setValueAtTime() {}, linearRampToValueAtTime() {} }, connect() {}, disconnect() {} };
+  }
+}
+
+test("music is silent before landing, starts once, stops and cleans up", async () => {
+  const original = globalThis.AudioContext;
+  globalThis.AudioContext = FakeContext;
+  contexts = [];
+  const music = createBirthdayMusic(() => assert.fail("unexpected playback failure"));
+  try {
+    music.setVisible(true);
+    assert.equal(contexts.length, 0, "initial visibility must not request audio");
+    await music.prepare();
+    const context = contexts[0];
+    assert.equal(context.voices.length, 0);
+    music.land();
+    assert.equal(context.voices.length, 25);
+    music.land();
+    assert.equal(context.voices.length, 25, "repeated landing cannot overlap melodies");
+    music.setEnabled(false);
+    assert.ok(context.voices.every(v => v.cancelled));
+    music.dispose();
+    assert.equal(context.state, "closed");
+  } finally { music.dispose(); globalThis.AudioContext = original; }
+});
+
+test("muting before landing survives pending audio unlock", async () => {
+  const original = globalThis.AudioContext;
+  globalThis.AudioContext = FakeContext;
+  contexts = [];
+  const music = createBirthdayMusic(() => assert.fail("unexpected playback failure"));
+  try {
+    const unlocking = music.prepare();
+    music.setEnabled(false);
+    music.land();
+    await unlocking;
+    assert.equal(contexts[0].voices.length, 0);
+  } finally { music.dispose(); globalThis.AudioContext = original; }
+});
+
+test("unsupported audio reports failure without throwing into the page", async () => {
+  const original = globalThis.AudioContext;
+  globalThis.AudioContext = undefined;
+  let blocked = false;
+  const music = createBirthdayMusic(() => { blocked = true; });
+  try { await music.prepare(); assert.ok(blocked); }
+  finally { music.dispose(); globalThis.AudioContext = original; }
+});
+
+test("landing descends to the plate then makes one small upward bounce", () => {
+  assert.equal(cakeLandingY(0), 2.4);
+  assert.equal(cakeLandingY(0.72), 0);
+  assert.ok(Math.abs(cakeLandingY(0.86) - 0.08) < 0.00001);
+  assert.ok(Math.abs(cakeLandingY(1)) < 0.00001);
+  assert.ok(cakeLandingY(0.36) < cakeLandingY(0.18));
+});

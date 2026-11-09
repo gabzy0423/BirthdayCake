@@ -6,6 +6,8 @@ import { useReducedMotion } from "motion/react";
 import { Component, useEffect, useState, type ReactNode } from "react";
 import Cake from "./Cake";
 import CakeFallback from "./CakeFallback";
+import CakeLanding from "./CakeLanding";
+import { useBirthdayMusic } from "../BirthdayMusic";
 
 const unavailableMessage = "The 3D view is unavailable. Your birthday wishes still belong here.";
 
@@ -40,7 +42,9 @@ function ContextGuard({ onLost }: { onLost: () => void }) {
 }
 
 export default function BirthdayScene() {
-  const reducedMotion = useReducedMotion() ?? true;
+  const motionPreference = useReducedMotion();
+  const reducedMotion = motionPreference !== false;
+  const music = useBirthdayMusic();
   const [contextLost, setContextLost] = useState(false);
 
   if (contextLost) return <CakeFallback message={unavailableMessage} />;
@@ -74,7 +78,9 @@ export default function BirthdayScene() {
           shadow-normalBias={0.035}
         />
         <Bounds fit clip observe margin={1.05} maxDuration={0}>
-          <Cake candleState="lit" reducedMotion={reducedMotion} />
+          <CakeLanding reducedMotion={motionPreference} onLanded={music.land}>
+            <Cake candleState="lit" reducedMotion={reducedMotion} />
+          </CakeLanding>
         </Bounds>
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.015, 0]} receiveShadow>
           <planeGeometry args={[20, 20]} />
