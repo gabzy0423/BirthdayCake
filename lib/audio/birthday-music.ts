@@ -13,6 +13,8 @@ export function createBirthdayMusic(onBlocked: () => void, onFinished: () => voi
   let listening = false;
   let disposed = false;
   let playing = false;
+  let looping = false;
+  let introFinished = false;
   let generation = 0;
   const voices = new Set<OscillatorNode>();
 
@@ -24,7 +26,7 @@ export function createBirthdayMusic(onBlocked: () => void, onFinished: () => voi
   }
 
   function play() {
-    if (disposed || !wanted || !landed || !visible || listening || context?.state !== "running" || playing) return;
+    if (disposed || !wanted || !landed || !visible || listening || introFinished && !looping || context?.state !== "running" || playing) return;
     playing = true;
     const rendition = generation;
     let time = context.currentTime + 0.04;
@@ -47,8 +49,12 @@ export function createBirthdayMusic(onBlocked: () => void, onFinished: () => voi
         gain.disconnect();
         if (index === melody.length - 1 && generation === rendition && playing && !disposed) {
           playing = false;
-          wanted = false;
-          onFinished();
+          if (looping) play();
+          else {
+            wanted = false;
+            introFinished = true;
+            onFinished();
+          }
         }
       };
       voice.start(time);
@@ -82,6 +88,7 @@ export function createBirthdayMusic(onBlocked: () => void, onFinished: () => voi
     },
     setEnabled(enabled: boolean) {
       wanted = enabled;
+      if (!enabled) looping = false;
       if (enabled) void prepare();
       else stop();
     },
@@ -94,6 +101,18 @@ export function createBirthdayMusic(onBlocked: () => void, onFinished: () => voi
       listening = value;
       if (value) stop();
       else if (wanted && context) void prepare();
+    },
+    startCelebration() {
+      if (disposed) return;
+      stop();
+      wanted = true;
+      listening = false;
+      looping = true;
+      void prepare();
+    },
+    stopCelebration() {
+      looping = false;
+      stop();
     },
     dispose() {
       disposed = true;

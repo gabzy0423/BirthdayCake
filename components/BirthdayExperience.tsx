@@ -12,6 +12,8 @@ const Experience = createContext<{
   greetingIndex: number | null;
   showBlowPrompt: boolean;
   extinguished: boolean;
+  postBlowGreeting: boolean;
+  celebrationComplete: boolean;
   extinguish: () => void;
   microphoneStatus: string;
   stopListening: () => void;
@@ -24,16 +26,22 @@ const visibleNow = () => !document.hidden;
 const serverVisible = () => true;
 
 export default function BirthdayExperience({ children }: { children: ReactNode }) {
-  const { introComplete, setListening } = useBirthdayMusic();
+  const { introComplete, setListening, startCelebration, stopCelebration } = useBirthdayMusic();
   const [extinguished, setExtinguished] = useState(false);
   const [microphoneEnabled, setMicrophoneEnabled] = useState(true);
+  const [postBlowStage, setPostBlowStage] = useState<"idle" | "waiting" | "greeting" | "complete">("idle");
   const [landed, setLanded] = useState(false);
   const [paused, setPaused] = useState(false);
   const [index, setIndex] = useState(0);
   const remaining = useRef(2000);
   const visible = useSyncExternalStore(subscribe, visibleNow, serverVisible);
   const land = useCallback(() => setLanded(true), []);
-  const extinguish = useCallback(() => setExtinguished(true), []);
+  const extinguish = useCallback(() => {
+    setExtinguished((current) => {
+      if (!current) setPostBlowStage("waiting");
+      return true;
+    });
+  }, []);
   const showBlowPrompt = landed && index >= catGreetings.length && introComplete && !extinguished;
   const active = showBlowPrompt && visible && microphoneEnabled;
   const microphoneStatus = useBlowDetection(active, extinguish);
@@ -55,7 +63,21 @@ export default function BirthdayExperience({ children }: { children: ReactNode }
       if (!finished) remaining.current = Math.max(0, remaining.current - (performance.now() - started));
     };
   }, [landed, paused, visible, index]);
-  return <Experience.Provider value={{ land, paused, setPaused, greetingIndex: landed && index < catGreetings.length ? index : null, showBlowPrompt, extinguished, extinguish, microphoneStatus, stopListening: () => setMicrophoneEnabled(false) }}>{children}</Experience.Provider>;
+  useEffect(() => {
+    if (postBlowStage !== "waiting") return;
+    const timer = window.setTimeout(() => setPostBlowStage("greeting"), 3000);
+    return () => window.clearTimeout(timer);
+  }, [postBlowStage]);
+  useEffect(() => {
+    if (postBlowStage !== "greeting") return;
+    startCelebration();
+    const timer = window.setTimeout(() => setPostBlowStage("complete"), 2000);
+    return () => {
+      window.clearTimeout(timer);
+      stopCelebration();
+    };
+  }, [postBlowStage, startCelebration, stopCelebration]);
+  return <Experience.Provider value={{ land, paused, setPaused, greetingIndex: landed && index < catGreetings.length ? index : null, showBlowPrompt, extinguished, postBlowGreeting: postBlowStage === "greeting", celebrationComplete: postBlowStage === "complete", extinguish, microphoneStatus, stopListening: () => setMicrophoneEnabled(false) }}>{children}</Experience.Provider>;
 }
 
 export function useBirthdayExperience() {

@@ -12,17 +12,17 @@ Status: requirements interview complete; user confirmed the consolidated underst
 - Give the seated cats gentle in-place head/body sway and occasional blinking, with different timing for each cat. Their positions stay fixed; this replaces the earlier side-view walking direction. Preserve a pause control for continuous animation and render still cats for reduced-motion preferences. The user confirmed this refinement and requested implementation.
 - Prioritize phone portrait layouts while retaining desktop and other responsive layouts required by AGENTS.md.
 - One successful blow extinguishes all candles together, rather than targeting individual candles.
-- Include a soft 8-bit/chiptune Happy Birthday instrumental with no vocals and gentle volume, playing one full rendition before stopping. The "Let's celebrate" action initiates the sequence; actual playback begins when the cake finishes landing. Keep the music toggle available to turn playback off/on, preserving any off choice made before landing. No audio starts on the untouched invitation. Do not add an "Opens with music" note.
+- Include a soft 8-bit/chiptune Happy Birthday instrumental with no vocals and gentle volume. The "Let's celebrate" action initiates the sequence; actual playback begins when the cake finishes landing. Keep the music toggle available to turn playback off/on, preserving any off choice made before landing. No audio starts on the untouched invitation. Do not add an "Opens with music" note. After a successful blow, wait three seconds, resume the sound, and let it loop through the post-blow reveal until the final message card appears; then stop it.
 - After the gift transition, the ready 3D cake and plate descend softly from above with one small bounce. Trigger music from landing completion, not a guessed scene-loading timeout. Under reduced motion, show the cake instantly and use its ready appearance as the equivalent music trigger. Cake loading or WebGL failure must not block the page; playback rejection leaves the toggle available for a user retry.
 - Automatically pause playing music while the microphone is listening. After extinguishing, resume only music that was playing beforehand; preserve the user's mute/pause choice. Do not start previously unstarted music automatically. On listening failure or cancellation, restore the prior playback choice without overriding subsequent user actions.
 - Use one round cake with a cream base, white frosting, and sage green decorations, with two numeral-shaped candles: "2" and "0". Both have flames and extinguish together. Do not add five regular candles from the earlier recommendation.
-- After the smoke, show a short confetti burst and this exact greeting:
+- After the smoke, wait three seconds, then show the same exact lowercase message in three individual cat bubbles simultaneously for two seconds: `happy birthday mommy!`. Dismiss those bubbles before the short confetti burst, then auto-open a persistent card-style final reveal containing:
 
   > Happy Birthday, Stephanie!
-  > May all your wishes come true. ✨
+  > I mean, Engr. Stephanie!
 
 - Do not include a replay or "Make another wish" button.
-- After confetti finishes, retain the greeting and cake with extinguished candles. A page refresh starts a fresh experience with lit candles; do not persist completion or automatically reopen microphone access.
+- After confetti finishes, retain the message card and cake with extinguished candles. The card has no close or replay action. A page refresh starts a fresh experience with lit candles; do not persist completion or automatically reopen microphone access.
 - Preserve the established flow: lit cake, completed song and cat greetings, blowing prompt with automatic browser microphone permission request, local blow detection or manual blow, flame exit, smoke, and birthday greeting.
 - Keep microphone access optional through an always-available manual blow action.
 
@@ -36,7 +36,7 @@ These are required checks, not results of tests already performed.
 - A sustained actual blow extinguishes both candles once. Brief noise and ordinary speech do not routinely trigger it under the tested conditions; record device/environment limitations rather than claiming perfect detection.
 - Manual blow produces the same flame exit, smoke, confetti, and exact greeting without microphone permission.
 - Microphone capture and analysis stop on completion, disable, failure, and unmount. Music returns only according to the user's prior playback choice.
-- Smoke follows extinguishing, then a short confetti burst and the greeting. Reduced-motion mode simplifies effects while retaining the greeting and completion behavior.
+- Smoke follows extinguishing, then the three-second pause, synchronized individual cat bubbles, a short confetti burst, and the persistent message card. Reduced-motion mode simplifies effects while retaining the greeting and completion behavior.
 - The finished cake and greeting remain visible without a replay action. Refresh restores the opening, without autoplay or automatic microphone access.
 - Keyboard controls, accessible status text, responsive framing, and a usable WebGL fallback meet the existing AGENTS.md requirements.
 - Run the proportionate lint, type, build, focused logic, and real-device checks specified in AGENTS.md once application code exists.
@@ -65,6 +65,8 @@ These are required checks, not results of tests already performed.
 - Reserve the cake area with a short loading status while the 3D scene loads; do not display a temporary cake drawing that flashes before the actual cake. Fit the camera immediately on scene mount. Keep the static cake fallback for WebGL failures. Do not show fabricated loading percentages or impose an extra countdown.
 - The invitation, cake landing, and landing-triggered music are implemented. Microphone listening is implemented and suppresses music while respecting the user playback preference.
 - Landing/music refinement: user accepted soft descent with one small bounce, instant reduced-motion appearance, gentle looping chiptune Happy Birthday with short gaps, and the music toggle as the off control. User rejected the additional "Opens with music" text, then requested implementation after pushing the earlier changes. This refinement is implemented.
+
+- Post-blow celebration refinement (2026-11-09): user confirmed that a successful blow extinguishes the flames and smoke plays first, followed by a three-second delay. Then all three cats speak simultaneously in separate bubbles, each with the exact lowercase text `happy birthday mommy!`, for two seconds. The birthday sound resumes at that reveal and loops until the confetti/final reveal completes. The bubbles disappear before the confetti. The final reveal is an automatically opened, persistent card-style message with two lines: `Happy Birthday, Stephanie!` and `I mean, Engr. Stephanie!`, with the second line emphasized slightly. There is no close or replay action; refresh resets the experience. This refinement is implemented and browser-checked.
 
 - Cat display refinement: user confirmed relaxed front-facing sitting poses; a bottom-center trio with small gaps and no container; and gentle in-place sway plus occasional blinking with individual timing. Black/Siamese/calico order and approximately 64px size were accepted with the arrangement recommendation. The user confirmed the consolidated design and requested implementation; the refinement interview is complete.
 

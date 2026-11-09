@@ -10,6 +10,8 @@ const MusicContext = createContext<{
   land: () => void;
   toggle: () => void;
   setListening: (listening: boolean) => void;
+  startCelebration: () => void;
+  stopCelebration: () => void;
 } | null>(null);
 
 export function BirthdayMusicProvider({ children }: { children: ReactNode }) {
@@ -17,15 +19,14 @@ export function BirthdayMusicProvider({ children }: { children: ReactNode }) {
   const [introComplete, setIntroComplete] = useState(false);
   const engine = useRef<ReturnType<typeof createBirthdayMusic> | null>(null);
   const preference = useRef(true);
+  const userMuted = useRef(false);
 
   useEffect(() => {
     const music = createBirthdayMusic(() => {
-      preference.current = false;
       setEnabled(false);
       setIntroComplete(true);
     }, () => {
-      preference.current = false;
-      setEnabled(false);
+      setEnabled(!userMuted.current);
       setIntroComplete(true);
     });
     engine.current = music;
@@ -42,14 +43,19 @@ export function BirthdayMusicProvider({ children }: { children: ReactNode }) {
   const prepare = useCallback(() => { void engine.current?.prepare(); }, []);
   const land = useCallback(() => engine.current?.land(), []);
   const setListening = useCallback((value: boolean) => engine.current?.setListening(value), []);
+  const startCelebration = useCallback(() => {
+    if (!userMuted.current) engine.current?.startCelebration();
+  }, []);
+  const stopCelebration = useCallback(() => engine.current?.stopCelebration(), []);
   const toggle = useCallback(() => {
-    preference.current = !preference.current;
+    userMuted.current = !userMuted.current;
+    preference.current = !userMuted.current;
     setEnabled(preference.current);
-    if (!preference.current) setIntroComplete(true);
+    if (userMuted.current) setIntroComplete(true);
     engine.current?.setEnabled(preference.current);
   }, []);
 
-  return <MusicContext.Provider value={{ enabled, introComplete, prepare, land, toggle, setListening }}>{children}</MusicContext.Provider>;
+  return <MusicContext.Provider value={{ enabled, introComplete, prepare, land, toggle, setListening, startCelebration, stopCelebration }}>{children}</MusicContext.Provider>;
 }
 
 export function useBirthdayMusic() {

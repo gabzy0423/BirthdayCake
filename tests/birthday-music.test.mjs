@@ -124,3 +124,23 @@ test("natural final note completes once, while interrupted notes never complete 
     assert.equal(context.voices.length, 50, "completed music never automatically restarts");
   } finally { music.dispose(); globalThis.AudioContext = original; }
 });
+
+test("post-blow celebration resumes only when enabled and loops until stopped", async () => {
+  const original = globalThis.AudioContext;
+  globalThis.AudioContext = FakeContext;
+  contexts = [];
+  const music = createBirthdayMusic(() => assert.fail("unexpected failure"), () => {});
+  try {
+    await music.prepare();
+    music.land();
+    const context = contexts[0];
+    context.voices[24].onended();
+    music.startCelebration();
+    await Promise.resolve();
+    assert.equal(context.voices.length, 50);
+    context.voices[49].onended();
+    assert.equal(context.voices.length, 75, "the celebration starts another rendition");
+    music.stopCelebration();
+    assert.ok(context.voices.slice(-25).every((voice) => voice.cancelled));
+  } finally { music.dispose(); globalThis.AudioContext = original; }
+});

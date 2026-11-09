@@ -461,6 +461,47 @@ button:disabled {
 .cat-greeting-1::after { left: calc(50% - 0.25rem); }
 .cat-greeting-2 { right: 0; }
 .cat-greeting-2::after { right: 1.75rem; }
+.post-blow-greeting { bottom: calc(100% + 2.25rem); }
+
+.celebration-reveal {
+  position: relative;
+  margin: 1rem auto 0;
+  width: min(100%, 18rem);
+  padding: 1rem 1.25rem;
+  border: 3px solid var(--sage-dark);
+  background: var(--cream);
+  box-shadow: 5px 5px 0 var(--sage);
+  color: var(--foreground);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  line-height: 1.35;
+  text-align: center;
+  animation: message-card-in 350ms steps(4, end) both;
+}
+
+.celebration-reveal-emphasis { margin-top: 0.5rem; color: var(--sage-dark); font-size: 1.2rem; }
+.confetti { position: absolute; inset: -1.25rem 0 auto; height: 1rem; pointer-events: none; }
+.confetti span { position: absolute; width: 0.4rem; height: 0.7rem; background: var(--sage); animation: confetti-pop 800ms steps(4, end) both; }
+.confetti span:nth-child(1) { left: 5%; background: var(--sage-dark); }
+.confetti span:nth-child(2) { left: 14%; animation-delay: 30ms; }
+.confetti span:nth-child(3) { left: 24%; background: var(--white); animation-delay: 60ms; }
+.confetti span:nth-child(4) { left: 34%; animation-delay: 90ms; }
+.confetti span:nth-child(5) { left: 44%; background: var(--sage-dark); animation-delay: 120ms; }
+.confetti span:nth-child(6) { left: 54%; animation-delay: 150ms; }
+.confetti span:nth-child(7) { left: 64%; background: var(--white); animation-delay: 180ms; }
+.confetti span:nth-child(8) { left: 74%; animation-delay: 210ms; }
+.confetti span:nth-child(9) { left: 84%; background: var(--sage-dark); animation-delay: 240ms; }
+.confetti span:nth-child(10) { left: 92%; animation-delay: 270ms; }
+.confetti span:nth-child(11) { left: 29%; top: 0.3rem; background: var(--white); animation-delay: 120ms; }
+.confetti span:nth-child(12) { left: 69%; top: 0.3rem; animation-delay: 180ms; }
+
+@keyframes message-card-in { from { opacity: 0; transform: translateY(0.75rem); } to { opacity: 1; transform: translateY(0); } }
+@keyframes confetti-pop { from { opacity: 0; transform: translateY(0) rotate(0); } 20% { opacity: 1; } to { opacity: 0; transform: translateY(-2rem) rotate(135deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .celebration-reveal,
+  .confetti span { animation: none; }
+}
 
 .microphone-status { margin-top: 0.5rem; font-size: 0.75rem; color: var(--muted); }
 .blow-controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-top: 0.5rem; }

@@ -106,7 +106,7 @@ try {
     assert.equal(await bubbleText(), 'happy birthday mom', 'pause preserves first bubble');
     assert.ok(await read("!document.querySelector('.blow-prompt p')"), 'cue waits for cats even after music ends');
     if (reduced) {
-      assert.equal(await read("document.querySelector('[role=switch]').getAttribute('aria-checked')"), 'false', 'one complete song stops');
+      assert.equal(await read("document.querySelector('[role=switch]').getAttribute('aria-checked')"), 'true', 'one complete song stops without changing the preference');
       assert.equal(await read('window.birthdayAudioCheck.starts.length'), 25, 'no song loop');
     }
     await read("Object.defineProperty(document, 'hidden', { configurable: true, value: true }); document.dispatchEvent(new Event('visibilitychange'))");
@@ -146,6 +146,15 @@ try {
     }
     assert.ok(await read("!!document.querySelector('[aria-label=\"3D birthday cake with extinguished number 20 candles\"]')"), 'both flames extinguish through the shared state');
     assert.ok(await read("!document.querySelector('.manual-blow') && !document.querySelector('.blow-prompt p')"), 'controls and prompt disappear after success');
+    await pause(3100);
+    assert.equal(await read("document.querySelectorAll('.post-blow-greeting').length"), 3, 'all cats greet after the post-blow delay');
+    assert.ok(await read("[...document.querySelectorAll('.post-blow-greeting')].every(node => node.textContent.includes('happy birthday mommy!'))"), 'post-blow cat wording is exact');
+    const revealStarts = await read('window.birthdayAudioCheck.starts.length');
+    assert.ok(reduced ? revealStarts > 25 : revealStarts === 25, `post-blow sound follows the music preference (starts: ${revealStarts})`);
+    await pause(2100);
+    assert.equal(await read("document.querySelectorAll('.post-blow-greeting').length"), 0, 'post-blow bubbles dismiss before the card');
+    assert.ok(await read("!!document.querySelector('.celebration-reveal')"), 'final message card appears');
+    assert.ok(await read("document.querySelector('.celebration-reveal')?.textContent.includes('I mean, Engr. Stephanie!')"), 'final card keeps the Engr. joke');
     if (reduced) assert.equal(await read('window.birthdayMicCheck.stops'), 1, 'microphone tracks stop, including late permission resolution');
     await send('Page.removeScriptToEvaluateOnNewDocument', { identifier: micFixture.identifier });
     await send('Page.reload');

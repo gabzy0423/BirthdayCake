@@ -36,7 +36,7 @@ function PixelCat({ coat }: { coat: "black" | "siamese" | "calico" }) {
 }
 
 export default function BirthdayCats() {
-  const { greetingIndex, paused, setPaused, showBlowPrompt, extinguish, microphoneStatus, stopListening } = useBirthdayExperience();
+  const { greetingIndex, paused, setPaused, showBlowPrompt, postBlowGreeting, celebrationComplete, extinguish, microphoneStatus, stopListening } = useBirthdayExperience();
   return (
     <footer className="cat-footer">
       <div role="status" aria-live="polite" aria-atomic="true">
@@ -44,6 +44,10 @@ export default function BirthdayCats() {
           <span className="sr-only">{["Black cat", "Siamese cat", "Calico cat"][greetingIndex]} says: </span>
           {catGreetings[greetingIndex]}
         </p>}
+        {postBlowGreeting && ["Black cat", "Siamese cat", "Calico cat"].map((cat, index) => <p key={cat} className={`cat-greeting cat-greeting-${index} post-blow-greeting`}>
+          <span className="sr-only">{cat} says: </span>
+          happy birthday mommy!
+        </p>)}
       </div>
       <div className="cat-trio" aria-hidden="true">
         <PixelCat coat="black" />
@@ -64,6 +68,11 @@ export default function BirthdayCats() {
         <input type="checkbox" className="cat-pause" checked={paused} onChange={(event) => setPaused(event.target.checked)} />
         Pause animations
       </label>
+      {celebrationComplete && <div className="celebration-reveal" role="dialog" aria-label="Birthday message">
+        <div className="confetti" aria-hidden="true">{Array.from({ length: 12 }, (_, index) => <span key={index} />)}</div>
+        <p>Happy Birthday, Stephanie!</p>
+        <p className="celebration-reveal-emphasis">I mean, Engr. Stephanie!</p>
+      </div>}
     </footer>
   );
 }
