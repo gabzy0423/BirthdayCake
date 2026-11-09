@@ -82,7 +82,12 @@ export default function BirthdayCats() {
         <div className="envelope">
           <div className="envelope-note">
             <p>Happy Birthday, Stephanie!</p>
-            <p className="envelope-note-emphasis">I mean, Engr. Stephanie!</p>
+            <p>May this new chapter bring you happiness, success, and wonderful memories.</p>
+            <p className="envelope-note-emphasis">Keep reaching for your dreams and shining bright, Engr. Stephanie!</p>
+            <p>Wishing you all the love and joy you deserve.</p>
+            <svg className="envelope-heart" viewBox="0 0 16 14" shapeRendering="crispEdges" aria-hidden="true">
+              <path d="M2 1h4v2h4V1h4v2h2v5h-2v2h-2v2H8v2H6v-2H4v-2H2V8H0V3h2z" />
+            </svg>
           </div>
           <div className="envelope-flap" aria-hidden="true" />
           <div className="envelope-seal" aria-hidden="true">✦</div>

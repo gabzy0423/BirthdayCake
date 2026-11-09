@@ -43,3 +43,7 @@ _Avoid_: Automatic music before the invitation, infinite audio after the celebra
 **Envelope reveal**:
 The centered final birthday presentation: a closed Sage Green + Cream + White pixel envelope with a small seal opens after confetti to reveal the persistent two-line message card.
 _Avoid_: Bottom footer card, heavy blocking modal, replay screen
+
+**Birthday card message**:
+The four-line English note revealed inside the envelope, ending with a small sage-green pixel heart graphic.
+_Avoid_: Long paragraph, plain emoji-only decoration

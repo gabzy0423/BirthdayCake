@@ -512,6 +512,7 @@ button:disabled {
 }
 
 .envelope-note-emphasis { margin-top: 0.5rem; color: var(--sage-dark); font-size: 1.08em; }
+.envelope-heart { display: block; width: 1.25rem; height: auto; margin: 0.75rem auto 0; fill: var(--sage); }
 .envelope-flap { position: absolute; z-index: 3; inset: 0 0 auto; height: 58%; background: var(--sage-soft); clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: 50% 0; transition: transform 350ms steps(4, end); }
 .envelope-seal { position: absolute; z-index: 4; top: 45%; left: 50%; display: grid; width: 1.75rem; height: 1.75rem; place-items: center; border: 2px solid var(--sage-dark); border-radius: 50%; background: var(--cream); color: var(--sage-dark); transform: translate(-50%, -50%); transition: opacity 150ms linear; }
 .envelope-reveal.is-open .envelope-flap { transform: rotateX(180deg); }
