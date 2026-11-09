@@ -36,10 +36,10 @@ _Avoid_: Replay screen
 The three feline companions in Stephanie's celebration: a black cat, a cream-white Siamese, and a white calico with orange and black patches.
 _Avoid_: Three black cats
 
-**Post-blow cat greeting**:
-The synchronized celebration message shown by all three birthday cats after a successful blow: each cat has its own speech bubble containing the exact lowercase text `happy birthday mommy!`.
-_Avoid_: Shared bubble, landing-time cat greeting
-
 **Celebration music loop**:
 The post-blow continuation of the birthday sound, allowed to repeat while the smoke, cat greeting, confetti, and final birthday message complete.
 _Avoid_: Automatic music before the invitation, infinite audio after the celebration ends
+
+**Envelope reveal**:
+The centered final birthday presentation: a closed Sage Green + Cream + White pixel envelope with a small seal opens after confetti to reveal the persistent two-line message card.
+_Avoid_: Bottom footer card, heavy blocking modal, replay screen

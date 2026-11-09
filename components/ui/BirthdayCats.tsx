@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { catGreetings, useBirthdayExperience } from "../BirthdayExperience";
+import { useBirthdayMusic } from "../BirthdayMusic";
 
 function PixelCat({ coat }: { coat: "black" | "siamese" | "calico" }) {
   return (
@@ -36,7 +38,18 @@ function PixelCat({ coat }: { coat: "black" | "siamese" | "calico" }) {
 }
 
 export default function BirthdayCats() {
-  const { greetingIndex, paused, setPaused, showBlowPrompt, postBlowGreeting, celebrationComplete, extinguish, microphoneStatus, stopListening } = useBirthdayExperience();
+  const { greetingIndex, paused, setPaused, showBlowPrompt, celebrationComplete, extinguish, microphoneStatus, stopListening } = useBirthdayExperience();
+  const { stopCelebration } = useBirthdayMusic();
+  const [envelopeOpen, setEnvelopeOpen] = useState(false);
+  useEffect(() => {
+    if (!celebrationComplete) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const timer = window.setTimeout(() => {
+      setEnvelopeOpen(true);
+      stopCelebration();
+    }, reduced ? 0 : 450);
+    return () => window.clearTimeout(timer);
+  }, [celebrationComplete, stopCelebration]);
   return (
     <footer className="cat-footer">
       <div role="status" aria-live="polite" aria-atomic="true">
@@ -44,10 +57,6 @@ export default function BirthdayCats() {
           <span className="sr-only">{["Black cat", "Siamese cat", "Calico cat"][greetingIndex]} says: </span>
           {catGreetings[greetingIndex]}
         </p>}
-        {postBlowGreeting && ["Black cat", "Siamese cat", "Calico cat"].map((cat, index) => <p key={cat} className={`cat-greeting cat-greeting-${index} post-blow-greeting`}>
-          <span className="sr-only">{cat} says: </span>
-          happy birthday mommy!
-        </p>)}
       </div>
       <div className="cat-trio" aria-hidden="true">
         <PixelCat coat="black" />
@@ -68,10 +77,16 @@ export default function BirthdayCats() {
         <input type="checkbox" className="cat-pause" checked={paused} onChange={(event) => setPaused(event.target.checked)} />
         Pause animations
       </label>
-      {celebrationComplete && <div className="celebration-reveal" role="dialog" aria-label="Birthday message">
+      {celebrationComplete && <div className={`envelope-reveal${envelopeOpen ? " is-open" : ""}`} role="dialog" aria-label="Birthday message">
         <div className="confetti" aria-hidden="true">{Array.from({ length: 12 }, (_, index) => <span key={index} />)}</div>
-        <p>Happy Birthday, Stephanie!</p>
-        <p className="celebration-reveal-emphasis">I mean, Engr. Stephanie!</p>
+        <div className="envelope">
+          <div className="envelope-note">
+            <p>Happy Birthday, Stephanie!</p>
+            <p className="envelope-note-emphasis">I mean, Engr. Stephanie!</p>
+          </div>
+          <div className="envelope-flap" aria-hidden="true" />
+          <div className="envelope-seal" aria-hidden="true">✦</div>
+        </div>
       </div>}
     </footer>
   );

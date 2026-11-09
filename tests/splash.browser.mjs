@@ -147,14 +147,12 @@ try {
     assert.ok(await read("!!document.querySelector('[aria-label=\"3D birthday cake with extinguished number 20 candles\"]')"), 'both flames extinguish through the shared state');
     assert.ok(await read("!document.querySelector('.manual-blow') && !document.querySelector('.blow-prompt p')"), 'controls and prompt disappear after success');
     await pause(3100);
-    assert.equal(await read("document.querySelectorAll('.post-blow-greeting').length"), 3, 'all cats greet after the post-blow delay');
-    assert.ok(await read("[...document.querySelectorAll('.post-blow-greeting')].every(node => node.textContent.includes('happy birthday mommy!'))"), 'post-blow cat wording is exact');
+    assert.equal(await read("document.querySelectorAll('.post-blow-greeting').length"), 0, 'post-blow cat bubbles stay removed');
     const revealStarts = await read('window.birthdayAudioCheck.starts.length');
     assert.ok(reduced ? revealStarts > 25 : revealStarts === 25, `post-blow sound follows the music preference (starts: ${revealStarts})`);
-    await pause(2100);
-    assert.equal(await read("document.querySelectorAll('.post-blow-greeting').length"), 0, 'post-blow bubbles dismiss before the card');
-    assert.ok(await read("!!document.querySelector('.celebration-reveal')"), 'final message card appears');
-    assert.ok(await read("document.querySelector('.celebration-reveal')?.textContent.includes('I mean, Engr. Stephanie!')"), 'final card keeps the Engr. joke');
+    await pause(600);
+    assert.ok(await read("!!document.querySelector('.envelope-reveal.is-open')"), 'envelope opens at the center');
+    assert.ok(await read("document.querySelector('.envelope-reveal')?.textContent.includes('I mean, Engr. Stephanie!')"), 'final card keeps the Engr. joke');
     if (reduced) assert.equal(await read('window.birthdayMicCheck.stops'), 1, 'microphone tracks stop, including late permission resolution');
     await send('Page.removeScriptToEvaluateOnNewDocument', { identifier: micFixture.identifier });
     await send('Page.reload');

@@ -12,7 +12,6 @@ const Experience = createContext<{
   greetingIndex: number | null;
   showBlowPrompt: boolean;
   extinguished: boolean;
-  postBlowGreeting: boolean;
   celebrationComplete: boolean;
   extinguish: () => void;
   microphoneStatus: string;
@@ -26,10 +25,10 @@ const visibleNow = () => !document.hidden;
 const serverVisible = () => true;
 
 export default function BirthdayExperience({ children }: { children: ReactNode }) {
-  const { introComplete, setListening, startCelebration, stopCelebration } = useBirthdayMusic();
+  const { introComplete, setListening, startCelebration } = useBirthdayMusic();
   const [extinguished, setExtinguished] = useState(false);
   const [microphoneEnabled, setMicrophoneEnabled] = useState(true);
-  const [postBlowStage, setPostBlowStage] = useState<"idle" | "waiting" | "greeting" | "complete">("idle");
+  const [postBlowStage, setPostBlowStage] = useState<"idle" | "waiting" | "music" | "envelope">("idle");
   const [landed, setLanded] = useState(false);
   const [paused, setPaused] = useState(false);
   const [index, setIndex] = useState(0);
@@ -65,19 +64,16 @@ export default function BirthdayExperience({ children }: { children: ReactNode }
   }, [landed, paused, visible, index]);
   useEffect(() => {
     if (postBlowStage !== "waiting") return;
-    const timer = window.setTimeout(() => setPostBlowStage("greeting"), 3000);
+    const timer = window.setTimeout(() => setPostBlowStage("music"), 3000);
     return () => window.clearTimeout(timer);
   }, [postBlowStage]);
   useEffect(() => {
-    if (postBlowStage !== "greeting") return;
+    if (postBlowStage !== "music") return;
     startCelebration();
-    const timer = window.setTimeout(() => setPostBlowStage("complete"), 2000);
-    return () => {
-      window.clearTimeout(timer);
-      stopCelebration();
-    };
-  }, [postBlowStage, startCelebration, stopCelebration]);
-  return <Experience.Provider value={{ land, paused, setPaused, greetingIndex: landed && index < catGreetings.length ? index : null, showBlowPrompt, extinguished, postBlowGreeting: postBlowStage === "greeting", celebrationComplete: postBlowStage === "complete", extinguish, microphoneStatus, stopListening: () => setMicrophoneEnabled(false) }}>{children}</Experience.Provider>;
+    const timer = window.setTimeout(() => setPostBlowStage("envelope"), 2000);
+    return () => window.clearTimeout(timer);
+  }, [postBlowStage, startCelebration]);
+  return <Experience.Provider value={{ land, paused, setPaused, greetingIndex: landed && index < catGreetings.length ? index : null, showBlowPrompt, extinguished, celebrationComplete: postBlowStage === "envelope", extinguish, microphoneStatus, stopListening: () => setMicrophoneEnabled(false) }}>{children}</Experience.Provider>;
 }
 
 export function useBirthdayExperience() {

@@ -461,25 +461,62 @@ button:disabled {
 .cat-greeting-1::after { left: calc(50% - 0.25rem); }
 .cat-greeting-2 { right: 0; }
 .cat-greeting-2::after { right: 1.75rem; }
-.post-blow-greeting { bottom: calc(100% + 2.25rem); }
-
-.celebration-reveal {
-  position: relative;
-  margin: 1rem auto 0;
-  width: min(100%, 18rem);
-  padding: 1rem 1.25rem;
-  border: 3px solid var(--sage-dark);
-  background: var(--cream);
-  box-shadow: 5px 5px 0 var(--sage);
-  color: var(--foreground);
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  line-height: 1.35;
-  text-align: center;
+.envelope-reveal {
+  position: fixed;
+  z-index: 10;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgb(52 69 56 / 18%);
   animation: message-card-in 350ms steps(4, end) both;
 }
 
-.celebration-reveal-emphasis { margin-top: 0.5rem; color: var(--sage-dark); font-size: 1.2rem; }
+.envelope {
+  position: relative;
+  width: min(18rem, 86vw);
+  aspect-ratio: 1.45;
+  border: 3px solid var(--sage-dark);
+  background: var(--sage);
+  box-shadow: 5px 5px 0 var(--sage-dark);
+  perspective: 30rem;
+}
+
+.envelope::before,
+.envelope::after {
+  position: absolute;
+  inset: auto 0 0;
+  height: 58%;
+  background: var(--sage-soft);
+  content: "";
+}
+
+.envelope::before { clip-path: polygon(0 0, 50% 100%, 100% 0); }
+.envelope::after { clip-path: polygon(0 100%, 0 0, 50% 58%, 100% 0, 100% 100%); background: var(--cream); }
+
+.envelope-note {
+  position: absolute;
+  z-index: 1;
+  inset: 12% 8% auto;
+  min-height: 75%;
+  padding: 1rem 0.75rem;
+  border: 2px solid var(--sage-dark);
+  background: var(--white);
+  color: var(--foreground);
+  font-family: var(--font-display);
+  font-size: clamp(0.85rem, 4vw, 1.1rem);
+  line-height: 1.35;
+  text-align: center;
+  transform: translateY(28%);
+  transition: transform 350ms steps(4, end);
+}
+
+.envelope-note-emphasis { margin-top: 0.5rem; color: var(--sage-dark); font-size: 1.08em; }
+.envelope-flap { position: absolute; z-index: 3; inset: 0 0 auto; height: 58%; background: var(--sage-soft); clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: 50% 0; transition: transform 350ms steps(4, end); }
+.envelope-seal { position: absolute; z-index: 4; top: 45%; left: 50%; display: grid; width: 1.75rem; height: 1.75rem; place-items: center; border: 2px solid var(--sage-dark); border-radius: 50%; background: var(--cream); color: var(--sage-dark); transform: translate(-50%, -50%); transition: opacity 150ms linear; }
+.envelope-reveal.is-open .envelope-flap { transform: rotateX(180deg); }
+.envelope-reveal.is-open .envelope-note { transform: translateY(-12%); }
+.envelope-reveal.is-open .envelope-seal { opacity: 0; }
 .confetti { position: absolute; inset: -1.25rem 0 auto; height: 1rem; pointer-events: none; }
 .confetti span { position: absolute; width: 0.4rem; height: 0.7rem; background: var(--sage); animation: confetti-pop 800ms steps(4, end) both; }
 .confetti span:nth-child(1) { left: 5%; background: var(--sage-dark); }
@@ -499,8 +536,12 @@ button:disabled {
 @keyframes confetti-pop { from { opacity: 0; transform: translateY(0) rotate(0); } 20% { opacity: 1; } to { opacity: 0; transform: translateY(-2rem) rotate(135deg); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .celebration-reveal,
+  .envelope-reveal,
+  .envelope-flap,
+  .envelope-note,
   .confetti span { animation: none; }
+  .envelope-flap,
+  .envelope-note { transition: none; }
 }
 
 .microphone-status { margin-top: 0.5rem; font-size: 0.75rem; color: var(--muted); }
