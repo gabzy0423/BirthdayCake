@@ -12,7 +12,8 @@ Status: requirements interview complete; user confirmed the consolidated underst
 - Give the seated cats gentle in-place head/body sway and occasional blinking, with different timing for each cat. Their positions stay fixed; this replaces the earlier side-view walking direction. Preserve a pause control for continuous animation and render still cats for reduced-motion preferences. The user confirmed this refinement and requested implementation.
 - Prioritize phone portrait layouts while retaining desktop and other responsive layouts required by AGENTS.md.
 - One successful blow extinguishes all candles together, rather than targeting individual candles.
-- Include soft birthday instrumental music with an on/off toggle in place of the original Music badge/Play-Mute presentation. Playback starts through a user action, not autoplay. Keep the toggle disabled and off until actual playback is connected.
+- Include a soft 8-bit/chiptune Happy Birthday instrumental with no vocals, gentle volume, and a brief gap between repetitions. The "Let's celebrate" action initiates the sequence; actual playback begins when the cake finishes landing. Keep the music toggle available to turn playback off/on, preserving any off choice made before landing. No audio starts on the untouched invitation. Do not add an "Opens with music" note.
+- After the gift transition, the ready 3D cake and plate descend softly from above with one small bounce. Trigger music from landing completion, not a guessed scene-loading timeout. Under reduced motion, show the cake instantly and use its ready appearance as the equivalent music trigger. Cake loading or WebGL failure must not block the page; playback rejection leaves the toggle available for a user retry.
 - Automatically pause playing music while the microphone is listening. After extinguishing, resume only music that was playing beforehand; preserve the user's mute/pause choice. Do not start previously unstarted music automatically. On listening failure or cancellation, restore the prior playback choice without overriding subsequent user actions.
 - Use one round cake with a cream base, white frosting, and sage green decorations, with two numeral-shaped candles: "2" and "0". Both have flames and extinguish together. Do not add five regular candles from the earlier recommendation.
 - After the smoke, show a short confetti burst and this exact greeting:
@@ -42,11 +43,18 @@ These are required checks, not results of tests already performed.
 
 ## Remaining setup and handoff
 
-- No actual instrumental audio asset has been supplied or acquired. Select a suitable track with permission for site use and record its source/attribution before delivery; the music requirement is agreed, but its asset is not ready.
+- No audio playback implementation or music asset exists yet. The agreed sound is chiptune Happy Birthday; choose a suitable original synthesized arrangement or an appropriately sourced asset during implementation and record its source as applicable.
 - The user confirmed the consolidated understanding and closed the interview. Begin application development only on an implementation request; do not repeat settled questions.
 - Do not install dependencies, scaffold components, or push documentation as part of this interview unless separately requested.
 
 ## Interview record
+
+- Splash interview (2026-11-09): user confirmed an invitation before the cake, staying until the "Let's celebrate" button is activated, with no automatic countdown. Show a centered pixel gift box, short "For Stephanie" heading, and one start button in the Sage Green + Cream + White palette. Keep it compact. Refresh or a new page load shows the invitation again.
+- Entry transition: the gift opens, then fades into the cake page in approximately half a second; use an instant transition with reduced motion. Prevent repeated activation during entry. The invitation replaces the opening view rather than obscuring an otherwise interactive cake page.
+- Revised landing/music flow: entering starts the cake entrance sequence, with music beginning at landing completion. Microphone enablement remains a separate explicit action. This supersedes the earlier toggle-only music start decision.
+- Reserve the cake area with a short loading status while the 3D scene loads; do not display a temporary cake drawing that flashes before the actual cake. Fit the camera immediately on scene mount. Keep the static cake fallback for WebGL failures. Do not show fabricated loading percentages or impose an extra countdown.
+- The user confirmed the consolidated splash flow and requested implementation. The invitation and entry transition are implemented; music playback and microphone interaction remain separate future features.
+- Landing/music refinement: user accepted soft descent with one small bounce, instant reduced-motion appearance, gentle looping chiptune Happy Birthday with short gaps, and the music toggle as the off control. User rejected the additional "Opens with music" text. Awaiting confirmation of this consolidated refinement; no landing or playback code has been implemented.
 
 - Cat display refinement: user confirmed relaxed front-facing sitting poses; a bottom-center trio with small gaps and no container; and gentle in-place sway plus occasional blinking with individual timing. Black/Siamese/calico order and approximately 64px size were accepted with the arrangement recommendation. The user confirmed the consolidated design and requested implementation; the refinement interview is complete.
 

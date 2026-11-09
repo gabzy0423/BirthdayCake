@@ -4,6 +4,14 @@ A personalized birthday celebration centered on a cake and a candle-blowing inte
 
 ## Language
 
+**Cake landing**:
+The arrival of Stephanie's birthday cake and plate in their display position, marking the start of the birthday melody.
+_Avoid_: Gift opening, birthday greeting reveal
+
+**Birthday invitation**:
+The opening welcome for Stephanie, featuring a gift and an invitation to enter her birthday celebration.
+_Avoid_: Automatic countdown, birthday greeting reveal
+
 **Celebrant**:
 The person whose birthday the experience celebrates: Stephanie.
 _Avoid_: Account, customer

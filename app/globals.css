@@ -42,6 +42,77 @@ button:disabled {
   cursor: not-allowed;
 }
 
+.birthday-invitation {
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  padding: 2rem 1.5rem;
+}
+
+.invitation-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.invitation-title {
+  color: var(--sage-dark);
+  font-size: clamp(2rem, 8vw, 3rem);
+  line-height: 1.2;
+}
+
+.invitation-gift {
+  width: clamp(9rem, 45vw, 13rem);
+  height: auto;
+}
+
+.invitation-button {
+  min-height: 3rem;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid var(--sage-dark);
+  background: var(--sage-soft);
+  box-shadow: 4px 4px 0 var(--sage-dark);
+  color: var(--foreground);
+  font-size: 1.125rem;
+  cursor: pointer;
+}
+
+.invitation-button:hover:not(:disabled) {
+  background: var(--white);
+}
+
+.invitation-button:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--sage-dark);
+}
+
+.invitation-opening {
+  animation: invitation-exit 500ms ease-in forwards;
+}
+
+.invitation-opening .gift-lid {
+  transform-origin: 64px 43px;
+  animation: gift-open 300ms steps(5, end) forwards;
+}
+
+@keyframes gift-open {
+  to { transform: translateY(-20px) rotate(-12deg); }
+}
+
+@keyframes invitation-exit {
+  0%, 55% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .invitation-opening,
+  .invitation-opening .gift-lid {
+    animation: none;
+  }
+}
+
 .birthday-page {
   flex: 1;
   font-family: var(--font-pixel), "Courier New", monospace;

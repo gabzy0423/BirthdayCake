@@ -2,9 +2,11 @@
 
 import BirthdayCake from "@/components/3d/BirthdayCake";
 import BirthdayCats from "@/components/ui/BirthdayCats";
+import BirthdayEntrance from "@/components/BirthdayEntrance";
 
 export default function Home() {
   return (
+    <BirthdayEntrance>
     <main className="birthday-page">
       <div className="birthday-shell">
         <header className="flex items-center justify-between gap-4">
@@ -44,5 +46,6 @@ export default function Home() {
         </section>
       </div>
     </main>
+    </BirthdayEntrance>
   );
 }

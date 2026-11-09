@@ -73,7 +73,7 @@ export default function BirthdayScene() {
           shadow-camera-bottom={-2}
           shadow-normalBias={0.035}
         />
-        <Bounds fit clip observe margin={1.05} maxDuration={reducedMotion ? 0 : 0.5}>
+        <Bounds fit clip observe margin={1.05} maxDuration={0}>
           <Cake candleState="lit" reducedMotion={reducedMotion} />
         </Bounds>
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.015, 0]} receiveShadow>
