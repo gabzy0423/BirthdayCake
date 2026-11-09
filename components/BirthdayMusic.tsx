@@ -5,6 +5,7 @@ import { createBirthdayMusic } from "@/lib/audio/birthday-music";
 
 const MusicContext = createContext<{
   enabled: boolean;
+  introComplete: boolean;
   prepare: () => void;
   land: () => void;
   toggle: () => void;
@@ -12,6 +13,7 @@ const MusicContext = createContext<{
 
 export function BirthdayMusicProvider({ children }: { children: ReactNode }) {
   const [enabled, setEnabled] = useState(true);
+  const [introComplete, setIntroComplete] = useState(false);
   const engine = useRef<ReturnType<typeof createBirthdayMusic> | null>(null);
   const preference = useRef(true);
 
@@ -19,6 +21,11 @@ export function BirthdayMusicProvider({ children }: { children: ReactNode }) {
     const music = createBirthdayMusic(() => {
       preference.current = false;
       setEnabled(false);
+      setIntroComplete(true);
+    }, () => {
+      preference.current = false;
+      setEnabled(false);
+      setIntroComplete(true);
     });
     engine.current = music;
     music.setVisible(!document.hidden);
@@ -36,10 +43,11 @@ export function BirthdayMusicProvider({ children }: { children: ReactNode }) {
   const toggle = useCallback(() => {
     preference.current = !preference.current;
     setEnabled(preference.current);
+    if (!preference.current) setIntroComplete(true);
     engine.current?.setEnabled(preference.current);
   }, []);
 
-  return <MusicContext.Provider value={{ enabled, prepare, land, toggle }}>{children}</MusicContext.Provider>;
+  return <MusicContext.Provider value={{ enabled, introComplete, prepare, land, toggle }}>{children}</MusicContext.Provider>;
 }
 
 export function useBirthdayMusic() {

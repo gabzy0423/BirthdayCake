@@ -3,11 +3,13 @@
 import BirthdayCake from "@/components/3d/BirthdayCake";
 import BirthdayCats from "@/components/ui/BirthdayCats";
 import BirthdayEntrance from "@/components/BirthdayEntrance";
+import BirthdayExperience from "@/components/BirthdayExperience";
 import { BirthdayMusicProvider, MusicToggle } from "@/components/BirthdayMusic";
 
 export default function Home() {
   return (
     <BirthdayMusicProvider>
+    <BirthdayExperience>
     <BirthdayEntrance>
     <main className="birthday-page">
       <div className="birthday-shell">
@@ -37,6 +39,7 @@ export default function Home() {
       </div>
     </main>
     </BirthdayEntrance>
+    </BirthdayExperience>
     </BirthdayMusicProvider>
   );
 }

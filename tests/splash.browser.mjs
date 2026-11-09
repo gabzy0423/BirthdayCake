@@ -69,14 +69,49 @@ try {
     }
     assert.equal(await read('window.birthdayAudioCheck.starts.length'), 25, 'landing starts one rendition');
     assert.ok(await read("window.birthdayAudioCheck.starts.every(type => type === 'square')"), 'chiptune waveform');
-    await read("document.querySelector('[role=switch]').click()");
-    assert.equal(await read("document.querySelector('[role=switch]').getAttribute('aria-checked')"), 'false', 'mute works');
-    assert.ok(await read('window.birthdayAudioCheck.cancels > 0 && window.birthdayAudioCheck.cancels <= 25'), 'mute cancels remaining scheduled notes');
+    if (!reduced) {
+      await read("document.querySelector('[role=switch]').click()");
+      assert.equal(await read("document.querySelector('[role=switch]').getAttribute('aria-checked')"), 'false', 'mute works');
+      assert.ok(await read('window.birthdayAudioCheck.cancels > 0 && window.birthdayAudioCheck.cancels <= 25'), 'mute cancels remaining scheduled notes');
+    }
+    const bubbleText = () => read("document.querySelector('.cat-greeting')?.lastChild.textContent.trim()");
+    assert.equal(await bubbleText(), 'happy birthday mom');
+    await read("document.querySelector('.cat-pause').click()");
+    await pause(reduced ? 10000 : 2300);
+    assert.equal(await bubbleText(), 'happy birthday mom', 'pause preserves first bubble');
+    assert.ok(await read("!document.querySelector('.blow-prompt p')"), 'cue waits for cats even after music ends');
+    if (reduced) {
+      assert.equal(await read("document.querySelector('[role=switch]').getAttribute('aria-checked')"), 'false', 'one complete song stops');
+      assert.equal(await read('window.birthdayAudioCheck.starts.length'), 25, 'no song loop');
+    }
+    await read("Object.defineProperty(document, 'hidden', { configurable: true, value: true }); document.dispatchEvent(new Event('visibilitychange'))");
+    await read("document.querySelector('.cat-pause').click()");
+    await pause(2300);
+    assert.equal(await bubbleText(), 'happy birthday mom', 'hidden tab remains paused even after checkbox resumes');
+    await read("Object.defineProperty(document, 'hidden', { configurable: true, value: false }); document.dispatchEvent(new Event('visibilitychange'))");
+    const resumed = Date.now();
+    while (await bubbleText() === 'happy birthday mom' && Date.now() - resumed < 2400) await pause(50);
+    assert.equal(await bubbleText(), 'happy bday mommy!');
+    assert.ok(Date.now() - resumed > 1100, 'remaining reading time is preserved');
+    const siameseStarted = Date.now();
+    await pause(1600);
+    assert.equal(await bubbleText(), 'happy bday mommy!', 'second message lasts two seconds');
+    while (await bubbleText() === 'happy bday mommy!' && Date.now() - siameseStarted < 2400) await pause(50);
+    assert.equal(await bubbleText(), 'happy birthday mowm!');
+    assert.equal(await read("document.querySelectorAll('.cat-greeting').length"), 1);
+    assert.ok(await read("(() => { const r = document.querySelector('.cat-greeting').getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; })()"), 'bubble fits phone width');
+    const calicoStarted = Date.now();
+    await pause(1600);
+    assert.equal(await bubbleText(), 'happy birthday mowm!');
+    while (await bubbleText() && Date.now() - calicoStarted < 2400) await pause(50);
+    assert.equal(await bubbleText(), undefined, 'sequence ends without repeating');
+    assert.equal(await read("document.querySelector('.blow-prompt p')?.textContent"), 'make a wish, then blow out the candles!');
+    assert.ok(await read("(() => { const r = document.querySelector('.blow-prompt').getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; })()"), 'cue fits phone width');
     await send('Page.reload');
     await pause(1200);
     assert.equal(await read("document.querySelector('h1')?.textContent"), 'For Stephanie', 'refresh restores invitation');
   }
-  console.log('Passed: invitation, keyboard entry, focus, refresh, reduced motion, phone fit, landing-triggered chiptune, mute.');
+  console.log('Passed: invitation, keyboard entry, focus, refresh, reduced motion, phone fit, landing-triggered chiptune, mute, cat greeting order/duration, pause/resume, hidden-tab timing.');
 } finally {
   await send('Browser.close');
 }

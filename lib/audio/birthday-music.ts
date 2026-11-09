@@ -5,26 +5,29 @@ const melody: [number, number][] = [
   [77, .5], [77, .5], [76, 1], [72, 1], [74, 1], [72, 2],
 ];
 
-export function createBirthdayMusic(onBlocked: () => void) {
+export function createBirthdayMusic(onBlocked: () => void, onFinished: () => void) {
   let context: AudioContext | undefined;
   let wanted = true;
   let landed = false;
   let visible = true;
   let disposed = false;
-  let timer: ReturnType<typeof setTimeout> | undefined;
+  let playing = false;
+  let generation = 0;
   const voices = new Set<OscillatorNode>();
 
   function stop() {
-    clearTimeout(timer);
-    timer = undefined;
+    generation++;
+    playing = false;
     for (const voice of voices) voice.stop();
     voices.clear();
   }
 
   function play() {
-    if (disposed || !wanted || !landed || !visible || context?.state !== "running" || timer !== undefined) return;
+    if (disposed || !wanted || !landed || !visible || context?.state !== "running" || playing) return;
+    playing = true;
+    const rendition = generation;
     let time = context.currentTime + 0.04;
-    for (const [note, beats] of melody) {
+    for (const [index, [note, beats]] of melody.entries()) {
       const voice = context.createOscillator();
       const gain = context.createGain();
       const duration = beats * 0.36;
@@ -41,15 +44,16 @@ export function createBirthdayMusic(onBlocked: () => void) {
         voices.delete(voice);
         voice.disconnect();
         gain.disconnect();
+        if (index === melody.length - 1 && generation === rendition && playing && !disposed) {
+          playing = false;
+          wanted = false;
+          onFinished();
+        }
       };
       voice.start(time);
       voice.stop(time + duration);
       time += duration;
     }
-    timer = setTimeout(() => {
-      timer = undefined;
-      play();
-    }, (time - context.currentTime + 1.5) * 1000);
   }
 
   async function prepare() {

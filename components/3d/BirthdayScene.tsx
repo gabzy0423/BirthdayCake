@@ -8,6 +8,7 @@ import Cake from "./Cake";
 import CakeFallback from "./CakeFallback";
 import CakeLanding from "./CakeLanding";
 import { useBirthdayMusic } from "../BirthdayMusic";
+import { useBirthdayExperience } from "../BirthdayExperience";
 
 const unavailableMessage = "The 3D view is unavailable. Your birthday wishes still belong here.";
 
@@ -45,6 +46,7 @@ export default function BirthdayScene() {
   const motionPreference = useReducedMotion();
   const reducedMotion = motionPreference !== false;
   const music = useBirthdayMusic();
+  const experience = useBirthdayExperience();
   const [contextLost, setContextLost] = useState(false);
 
   if (contextLost) return <CakeFallback message={unavailableMessage} />;
@@ -78,7 +80,7 @@ export default function BirthdayScene() {
           shadow-normalBias={0.035}
         />
         <Bounds fit clip observe margin={1.05} maxDuration={0}>
-          <CakeLanding reducedMotion={motionPreference} onLanded={music.land}>
+          <CakeLanding reducedMotion={motionPreference} onLanded={() => { music.land(); experience.land(); }}>
             <Cake candleState="lit" reducedMotion={reducedMotion} />
           </CakeLanding>
         </Bounds>

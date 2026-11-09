@@ -1,4 +1,4 @@
-import assert from "node:assert/strict";
+﻿import assert from "node:assert/strict";
 import test from "node:test";
 import { createBirthdayMusic } from "../lib/audio/birthday-music.ts";
 import { cakeLandingY } from "../lib/cake-landing.ts";
@@ -27,7 +27,7 @@ test("music is silent before landing, starts once, stops and cleans up", async (
   const original = globalThis.AudioContext;
   globalThis.AudioContext = FakeContext;
   contexts = [];
-  const music = createBirthdayMusic(() => assert.fail("unexpected playback failure"));
+  const music = createBirthdayMusic(() => assert.fail("unexpected playback failure"), () => {});
   try {
     music.setVisible(true);
     assert.equal(contexts.length, 0, "initial visibility must not request audio");
@@ -49,7 +49,7 @@ test("muting before landing survives pending audio unlock", async () => {
   const original = globalThis.AudioContext;
   globalThis.AudioContext = FakeContext;
   contexts = [];
-  const music = createBirthdayMusic(() => assert.fail("unexpected playback failure"));
+  const music = createBirthdayMusic(() => assert.fail("unexpected playback failure"), () => {});
   try {
     const unlocking = music.prepare();
     music.setEnabled(false);
@@ -63,7 +63,7 @@ test("unsupported audio reports failure without throwing into the page", async (
   const original = globalThis.AudioContext;
   globalThis.AudioContext = undefined;
   let blocked = false;
-  const music = createBirthdayMusic(() => { blocked = true; });
+  const music = createBirthdayMusic(() => { blocked = true; }, () => {});
   try { await music.prepare(); assert.ok(blocked); }
   finally { music.dispose(); globalThis.AudioContext = original; }
 });
@@ -74,4 +74,31 @@ test("landing descends to the plate then makes one small upward bounce", () => {
   assert.ok(Math.abs(cakeLandingY(0.86) - 0.08) < 0.00001);
   assert.ok(Math.abs(cakeLandingY(1)) < 0.00001);
   assert.ok(cakeLandingY(0.36) < cakeLandingY(0.18));
+});
+
+test("natural final note completes once, while interrupted notes never complete the song", async () => {
+  const original = globalThis.AudioContext;
+  globalThis.AudioContext = FakeContext;
+  contexts = [];
+  let completed = 0;
+  const music = createBirthdayMusic(() => assert.fail("unexpected failure"), () => { completed++; });
+  try {
+    await music.prepare();
+    music.land();
+    const context = contexts[0];
+    context.voices[0].onended();
+    assert.equal(completed, 0);
+    music.setVisible(false);
+    context.voices[24].onended();
+    assert.equal(completed, 0, "hiding the page is not a finished rendition");
+    music.setVisible(true);
+    await Promise.resolve();
+    assert.equal(context.voices.length, 50);
+    context.voices[49].onended();
+    context.voices[49].onended();
+    assert.equal(completed, 1);
+    await music.prepare();
+    music.setVisible(true);
+    assert.equal(context.voices.length, 50, "completed music never automatically restarts");
+  } finally { music.dispose(); globalThis.AudioContext = original; }
 });
