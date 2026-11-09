@@ -10,6 +10,7 @@ export function createBirthdayMusic(onBlocked: () => void, onFinished: () => voi
   let wanted = true;
   let landed = false;
   let visible = true;
+  let listening = false;
   let disposed = false;
   let playing = false;
   let generation = 0;
@@ -23,7 +24,7 @@ export function createBirthdayMusic(onBlocked: () => void, onFinished: () => voi
   }
 
   function play() {
-    if (disposed || !wanted || !landed || !visible || context?.state !== "running" || playing) return;
+    if (disposed || !wanted || !landed || !visible || listening || context?.state !== "running" || playing) return;
     playing = true;
     const rendition = generation;
     let time = context.currentTime + 0.04;
@@ -88,6 +89,11 @@ export function createBirthdayMusic(onBlocked: () => void, onFinished: () => voi
       visible = value;
       if (value && wanted && context) void prepare();
       else if (!value) stop();
+    },
+    setListening(value: boolean) {
+      listening = value;
+      if (value) stop();
+      else if (wanted && context) void prepare();
     },
     dispose() {
       disposed = true;

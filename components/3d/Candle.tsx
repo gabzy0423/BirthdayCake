@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { createCandleShape } from "@/lib/cake-geometry";
 import Flame from "./Flame";
+import Smoke from "./Smoke";
 
 export type CandleState = "lit" | "extinguished";
 
@@ -33,6 +34,7 @@ export default function Candle({ digit, position, state, reducedMotion }: Candle
         <meshStandardMaterial color="#4a3e30" />
       </mesh>
       <Flame lit={state === "lit"} reducedMotion={reducedMotion} phase={digit === "2" ? 0 : 2} />
+      {state === "extinguished" && <Smoke reducedMotion={reducedMotion} />}
     </group>
   );
 }

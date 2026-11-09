@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
   <a href="#a-surprise-for-stephanie">
     <img src="design/logo/concept-c-v1-pixel-sage-rounded-round.png" width="144" height="144" alt="Sage green pixel-art S-shaped birthday cake with white frosting on a rounded cream background" />
   </a>
@@ -43,7 +43,7 @@ The selected rounded logo is also the site's browser favicon. These HEX values d
 
 ## The birthday experience
 
-**In development:** the portrait-first layout, gift invitation, procedural 3D cake, soft landing, animated numeral candles, and chiptune music toggle are implemented. Microphone detection, the manual blow action, and celebration effects remain planned features.
+**In development:** the portrait-first layout, gift invitation, procedural 3D cake, soft landing, animated numeral candles, and chiptune music toggle are implemented. Automatic microphone permission, local blow detection, the manual blow action, and smoke are implemented. Confetti and the final greeting remain planned; real-phone calibration is pending.
 
 <details>
 <summary>1. The birthday cake</summary>
@@ -55,7 +55,7 @@ A round 3D cake with a cream base, white frosting, sage green decorations, and t
 <details>
 <summary>2. Candle interaction</summary>
 
-Choose to enable the microphone, then blow to extinguish both candles together. Audio will be analyzed locally without recording, storing, or uploading it. A manual blow button will offer the same celebration without microphone access.
+After the song and cat greetings finish, the blowing stage requests microphone permission automatically. Allow access, pause briefly for ambient calibration, then blow to extinguish both flames together. Audio is analyzed locally without recording or uploading. The manual Blow candles button also works without permission. Stop listening releases capture; leaving the tab stops capture and returning to the visible blowing stage restarts the request unless listening was stopped.
 
 Blow detection is a heuristic and will need real microphone testing; speech and room noise may affect it.
 
@@ -73,7 +73,7 @@ Reduced-motion preferences and a usable fallback when 3D rendering is unavailabl
 <details>
 <summary>Music and playback controls</summary>
 
-The invitation's start action prepares audio silently. A softly synthesized 8-bit Happy Birthday melody begins when the cake lands, repeating after a short pause. The Music toggle turns playback off/on; audio pauses when the page is hidden. With reduced motion, the cake appears instantly and starts the melody when ready. Future microphone integration must pause music during listening and respect the user's playback choice afterward.
+The invitation's start action prepares audio silently. A softly synthesized 8-bit Happy Birthday melody begins when the cake lands, stopping after one rendition. The Music toggle turns playback off/on; audio pauses when the page is hidden. With reduced motion, the cake appears instantly and starts the melody when ready. Microphone listening pauses music and respects the user's playback choice afterward.
 
 The melody uses local Web Audio synthesis, with no external recording or music download. Real-device listening checks remain pending.
 
@@ -85,7 +85,7 @@ The melody uses local Web Audio synthesis, with no external recording or music d
 - [x] Design the sage green pixel-art cake logo
 - [x] Add the selected rounded logo as the browser favicon
 - [x] Build the responsive 3D cake and animated candles
-- [ ] Add local microphone detection and the manual blow action
+- [x] Add local microphone detection and the manual blow action
 - [x] Add music controls and synthesized chiptune birthday music
 - [ ] Add smoke, confetti, and the birthday greeting
 - [ ] Verify accessibility, fallbacks, and real-device behavior
@@ -112,7 +112,7 @@ The melody uses local Web Audio synthesis, with no external recording or music d
 | Code quality | ESLint, TypeScript | Linting and type checks |
 | Tooling | Node.js, npm | Development scripts, dependency management, and focused tests |
 
-Planned microphone analysis uses the browser's **Web Audio API** and **MediaDevices API**. No microphone SDK is required.
+Microphone analysis uses the browser's **Web Audio API** and **MediaDevices API**. No microphone SDK is required.
 
 ## Run locally
 

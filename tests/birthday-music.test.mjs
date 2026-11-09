@@ -76,6 +76,28 @@ test("landing descends to the plate then makes one small upward bounce", () => {
   assert.ok(cakeLandingY(0.36) < cakeLandingY(0.18));
 });
 
+test("microphone listening keeps music silent and restores only the prior on preference", async () => {
+  const original = globalThis.AudioContext;
+  globalThis.AudioContext = FakeContext;
+  contexts = [];
+  const music = createBirthdayMusic(() => assert.fail("unexpected failure"), () => {});
+  try {
+    await music.prepare();
+    music.setListening(true);
+    music.land();
+    music.setEnabled(true);
+    await Promise.resolve();
+    assert.equal(contexts[0].voices.length, 0);
+    music.setEnabled(false);
+    music.setListening(false);
+    await Promise.resolve();
+    assert.equal(contexts[0].voices.length, 0, "an off choice must survive listening");
+    music.setEnabled(true);
+    await Promise.resolve();
+    assert.equal(contexts[0].voices.length, 25);
+  } finally { music.dispose(); globalThis.AudioContext = original; }
+});
+
 test("natural final note completes once, while interrupted notes never complete the song", async () => {
   const original = globalThis.AudioContext;
   globalThis.AudioContext = FakeContext;

@@ -461,3 +461,9 @@ button:disabled {
 .cat-greeting-1::after { left: calc(50% - 0.25rem); }
 .cat-greeting-2 { right: 0; }
 .cat-greeting-2::after { right: 1.75rem; }
+
+.microphone-status { margin-top: 0.5rem; font-size: 0.75rem; color: var(--muted); }
+.blow-controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-top: 0.5rem; }
+.manual-blow, .stop-listening { min-height: 2.75rem; padding: 0.5rem 0.875rem; font-size: 0.875rem; cursor: pointer; }
+.manual-blow { border: 2px solid var(--sage-dark); background: var(--sage-soft); }
+.stop-listening { color: var(--sage-dark); text-decoration: underline; }

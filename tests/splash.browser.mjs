@@ -43,9 +43,33 @@ try {
       }
     };
   ` });
-  for (const [width, height, reduced] of [[390, 844, false], [320, 667, true]]) {
+  for (const [width, height, reduced] of [[390, 844, false], [320, 667, true], [390, 844, true]]) {
     await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false });
     await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: reduced ? 'reduce' : 'no-preference' }] });
+    const micFixture = await send('Page.addScriptToEvaluateOnNewDocument', { source: `
+      window.birthdayMicCheck = { requests: 0, stops: 0 };
+      window.makeTestStream = async () => {
+        const context = new AudioContext();
+        await context.resume();
+        const buffer = context.createBuffer(1, context.sampleRate * 2, context.sampleRate);
+        const samples = buffer.getChannelData(0);
+        let seed = 42;
+        for (let i = 0; i < samples.length; i++) { seed = (seed * 16807) % 2147483647; samples[i] = (seed / 2147483647) * 2 - 1; }
+        const source = context.createBufferSource(); source.buffer = buffer; source.loop = true;
+        const gain = context.createGain(); gain.gain.value = 0;
+        const destination = context.createMediaStreamDestination();
+        source.connect(gain); gain.connect(destination); source.start();
+        window.blowTestGain = gain;
+        const track = destination.stream.getTracks()[0]; const stop = track.stop.bind(track);
+        let stopped = false;
+        track.stop = () => { if (!stopped) { stopped = true; window.birthdayMicCheck.stops++; source.stop(); void context.close(); } stop(); };
+        return destination.stream;
+      };
+      navigator.mediaDevices.getUserMedia = async () => {
+        window.birthdayMicCheck.requests++;
+        ${!reduced ? "throw new DOMException('Denied', 'NotAllowedError');" : width === 320 ? "return window.makeTestStream();" : "return new Promise(resolve => { window.resolveTestMic = resolve; });"}
+      };
+    ` });
     await send('Page.navigate', { url: 'http://localhost:3000' });
     for (let i = 0; i < 60; i++) {
       await pause(200);
@@ -55,6 +79,7 @@ try {
     assert.equal(await read("document.querySelector('h1')?.textContent"), 'For Stephanie', 'no auto-entry');
     assert.equal(await read("document.querySelectorAll('canvas').length"), 0, 'cake is not mounted behind splash');
     assert.equal(await read('window.birthdayAudioCheck.contexts'), 0, 'no audio context before entry gesture');
+    assert.equal(await read('window.birthdayMicCheck.requests'), 0, 'no microphone request before blowing stage');
     assert.ok(await read('document.documentElement.scrollHeight <= innerHeight && document.documentElement.scrollWidth <= innerWidth'), 'invitation fits phone');
     await read("document.querySelector('.invitation-button').focus()");
     await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, text: '\r', unmodifiedText: '\r' });
@@ -107,11 +132,47 @@ try {
     assert.equal(await bubbleText(), undefined, 'sequence ends without repeating');
     assert.equal(await read("document.querySelector('.blow-prompt p')?.textContent"), 'make a wish, then blow out the candles!');
     assert.ok(await read("(() => { const r = document.querySelector('.blow-prompt').getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; })()"), 'cue fits phone width');
+    await pause(1000);
+    assert.equal(await read('window.birthdayMicCheck.requests'), 1, 'microphone requested automatically once');
+    if (width === 320) {
+      await read('window.blowTestGain.gain.value = 0.3');
+    } else {
+      await read("document.querySelector('.manual-blow').click()");
+      if (reduced) await read('window.makeTestStream().then(stream => window.resolveTestMic(stream))');
+    }
+    for (let i = 0; i < 40; i++) {
+      if (await read("!!document.querySelector('[aria-label=\"3D birthday cake with extinguished number 20 candles\"]')")) break;
+      await pause(100);
+    }
+    assert.ok(await read("!!document.querySelector('[aria-label=\"3D birthday cake with extinguished number 20 candles\"]')"), 'both flames extinguish through the shared state');
+    assert.ok(await read("!document.querySelector('.manual-blow') && !document.querySelector('.blow-prompt p')"), 'controls and prompt disappear after success');
+    if (reduced) assert.equal(await read('window.birthdayMicCheck.stops'), 1, 'microphone tracks stop, including late permission resolution');
+    await send('Page.removeScriptToEvaluateOnNewDocument', { identifier: micFixture.identifier });
     await send('Page.reload');
     await pause(1200);
     assert.equal(await read("document.querySelector('h1')?.textContent"), 'For Stephanie', 'refresh restores invitation');
   }
-  console.log('Passed: invitation, keyboard entry, focus, refresh, reduced motion, phone fit, landing-triggered chiptune, mute, cat greeting order/duration, pause/resume, hidden-tab timing.');
+  await send('Page.addScriptToEvaluateOnNewDocument', { source: `
+    const nativeGetContext = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function(type, ...args) {
+      return type.startsWith('webgl') ? null : nativeGetContext.call(this, type, ...args);
+    };
+    navigator.mediaDevices.getUserMedia = async () => { throw new DOMException('Denied', 'NotAllowedError'); };
+  ` });
+  await send('Page.navigate', { url: 'http://localhost:3000' });
+  await pause(1200);
+  await read("document.querySelector('.invitation-button').focus()");
+  await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, text: '\r' });
+  await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 });
+  for (let i = 0; i < 100; i++) {
+    if (await read("!!document.querySelector('.manual-blow')")) break;
+    await pause(200);
+  }
+  assert.ok(await read("!!document.querySelector('.fallback-cake') && !!document.querySelector('.manual-blow')"), 'WebGL failure still reaches usable manual blowing stage');
+  await read("document.querySelector('.manual-blow').click()");
+  await pause(100);
+  assert.ok(await read("!document.querySelector('.manual-blow')"));
+  console.log('Passed: splash/music/cat timing, mic denial, synthetic analyser blow, late permission cleanup, manual extinguishing, and WebGL fallback.');
 } finally {
   await send('Browser.close');
 }

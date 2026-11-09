@@ -36,7 +36,7 @@ function PixelCat({ coat }: { coat: "black" | "siamese" | "calico" }) {
 }
 
 export default function BirthdayCats() {
-  const { greetingIndex, paused, setPaused, showBlowPrompt } = useBirthdayExperience();
+  const { greetingIndex, paused, setPaused, showBlowPrompt, extinguish, microphoneStatus, stopListening } = useBirthdayExperience();
   return (
     <footer className="cat-footer">
       <div role="status" aria-live="polite" aria-atomic="true">
@@ -51,8 +51,15 @@ export default function BirthdayCats() {
         <PixelCat coat="calico" />
       </div>
       <div className="blow-prompt" role="status" aria-live="polite">
-        {showBlowPrompt && <p>make a wish, then blow out the candles!</p>}
+        {showBlowPrompt && <>
+          <p>make a wish, then blow out the candles!</p>
+          <p className="microphone-status">{microphoneStatus === "requesting" ? "Allow microphone access to blow out the candles. Audio stays on your device." : microphoneStatus === "listening" ? "Listening… gently blow toward your microphone." : microphoneStatus === "error" ? "Microphone unavailable. You can blow out the candles with a tap." : "Microphone stopped. Use the button below."}</p>
+        </>}
       </div>
+      {showBlowPrompt && <div className="blow-controls">
+        <button type="button" className="manual-blow" onClick={extinguish}>Blow candles</button>
+        {(microphoneStatus === "listening" || microphoneStatus === "requesting") && <button type="button" className="stop-listening" onClick={stopListening}>Stop listening</button>}
+      </div>}
       <label className="cat-pause-control">
         <input type="checkbox" className="cat-pause" checked={paused} onChange={(event) => setPaused(event.target.checked)} />
         Pause animations

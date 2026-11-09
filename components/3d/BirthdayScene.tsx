@@ -12,6 +12,13 @@ import { useBirthdayExperience } from "../BirthdayExperience";
 
 const unavailableMessage = "The 3D view is unavailable. Your birthday wishes still belong here.";
 
+function SceneFallback() {
+  const { land: experienceReady } = useBirthdayExperience();
+  const { land: musicReady } = useBirthdayMusic();
+  useEffect(() => { experienceReady(); musicReady(); }, [experienceReady, musicReady]);
+  return <CakeFallback message={unavailableMessage} />;
+}
+
 class SceneBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
 
@@ -21,7 +28,7 @@ class SceneBoundary extends Component<{ children: ReactNode }, { failed: boolean
 
   render() {
     return this.state.failed
-      ? <CakeFallback message={unavailableMessage} />
+      ? <SceneFallback />
       : this.props.children;
   }
 }
@@ -49,7 +56,7 @@ export default function BirthdayScene() {
   const experience = useBirthdayExperience();
   const [contextLost, setContextLost] = useState(false);
 
-  if (contextLost) return <CakeFallback message={unavailableMessage} />;
+  if (contextLost) return <SceneFallback />;
 
   return (
     <SceneBoundary>
@@ -62,7 +69,7 @@ export default function BirthdayScene() {
         gl={{ alpha: true, antialias: false, powerPreference: "low-power" }}
         fallback={<CakeFallback message={unavailableMessage} />}
         role="img"
-        aria-label="3D cream birthday cake with white frosting, sage green decorations, and lit number 20 candles"
+        aria-label={`3D birthday cake with ${experience.extinguished ? "extinguished" : "lit"} number 20 candles`}
       >
         <ContextGuard onLost={() => setContextLost(true)} />
         <ambientLight intensity={1.4} />
@@ -81,7 +88,7 @@ export default function BirthdayScene() {
         />
         <Bounds fit clip observe margin={1.05} maxDuration={0}>
           <CakeLanding reducedMotion={motionPreference} onLanded={() => { music.land(); experience.land(); }}>
-            <Cake candleState="lit" reducedMotion={reducedMotion} />
+            <Cake candleState={experience.extinguished ? "extinguished" : "lit"} reducedMotion={reducedMotion} />
           </CakeLanding>
         </Bounds>
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.015, 0]} receiveShadow>

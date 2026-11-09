@@ -25,7 +25,7 @@ Product decisions from the requirements interview live in [docs/requirements.md]
 Build an immersive birthday experience centered on a polished 3D cake, not a conventional static page. The intended sequence is:
 
 1. Render a responsive cake with frosting, decorations, candles, and animated lit flames.
-2. Offer an explicit microphone enable action; never request access automatically.
+2. After the invitation, song, and cat greetings finish, show the blowing prompt and automatically request microphone permission at that stage. The user explicitly chose this flow; no separate Enable microphone button is required. Never bypass browser permission.
 3. Analyze microphone input locally for a sustained blowing-like sound.
 4. Extinguish the candles, smoothly transition the flames out, and play a brief smoke effect.
 5. Reveal a birthday greeting or surprise animation.
@@ -130,7 +130,7 @@ package-lock.json
 ## Microphone and blowing detection
 
 - Use `navigator.mediaDevices.getUserMedia({ audio: ... })`, `AudioContext`, and `AnalyserNode`; no microphone SDK is needed.
-- Explain the purpose before the user enables the microphone. Request permission only from that action. Do not request video, record/store/upload audio, or connect microphone output to speakers.
+- Explain microphone use in the blowing-stage context, then automatically request browser permission after the song and cat greetings complete, as explicitly selected by the user. Do not request access on the untouched invitation. Start capture only after browser approval or an applicable existing grant; handle denied, ignored, and unsupported requests without blocking the manual blow action. Do not request video, record/store/upload audio, or connect microphone output to speakers.
 - Feature-detect the APIs and secure context. Microphone access needs HTTPS in deployment or a supported localhost development context. Permission denial, missing hardware, a busy device, and unsupported APIs must leave the manual blow action usable.
 - Resume a suspended audio context through the user's enable action as needed, and handle rejected permission/resume requests. Do not repeatedly prompt after denial.
 - Make sensitivity, sustained-duration requirements, calibration/noise floor, and cooldown configurable through typed internal settings. Do not add a settings panel unless requested.

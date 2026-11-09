@@ -9,6 +9,7 @@ const MusicContext = createContext<{
   prepare: () => void;
   land: () => void;
   toggle: () => void;
+  setListening: (listening: boolean) => void;
 } | null>(null);
 
 export function BirthdayMusicProvider({ children }: { children: ReactNode }) {
@@ -40,6 +41,7 @@ export function BirthdayMusicProvider({ children }: { children: ReactNode }) {
 
   const prepare = useCallback(() => { void engine.current?.prepare(); }, []);
   const land = useCallback(() => engine.current?.land(), []);
+  const setListening = useCallback((value: boolean) => engine.current?.setListening(value), []);
   const toggle = useCallback(() => {
     preference.current = !preference.current;
     setEnabled(preference.current);
@@ -47,7 +49,7 @@ export function BirthdayMusicProvider({ children }: { children: ReactNode }) {
     engine.current?.setEnabled(preference.current);
   }, []);
 
-  return <MusicContext.Provider value={{ enabled, introComplete, prepare, land, toggle }}>{children}</MusicContext.Provider>;
+  return <MusicContext.Provider value={{ enabled, introComplete, prepare, land, toggle, setListening }}>{children}</MusicContext.Provider>;
 }
 
 export function useBirthdayMusic() {
